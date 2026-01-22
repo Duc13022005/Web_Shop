@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Display - Cửa Hàng Tiện Lợi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #718096;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+
+        .category-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .category-header h2 {
+            color: #4a5568;
+            font-size: 1.25rem;
+        }
+
+        .category-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            font-size: 0.875rem;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-sku {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .product-price .original {
+            color: #a0aec0;
+            text-decoration: line-through;
+            font-size: 0.875rem;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .badge-unit {
+            background: #ebf4ff;
+            color: #4c51bf;
+        }
+
+        .badge-age {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .no-image {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .no-image svg {
+            width: 40px;
+            height: 40px;
+            opacity: 0.4;
+        }
+
+        .instructions {
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .instructions h3 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .instructions code {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏪 Cửa Hàng Tiện Lợi - Test Display</h1>
+            <p>Hiển thị sản phẩm và ảnh từ mock data</p>
+        </header>
+
+        <div class="instructions">
+            <h3>📌 Hướng dẫn</h3>
+            <p>File này hiển thị ảnh từ thư mục <code>src/uploads/{category}/</code>. Để có ảnh:</p>
+            <ol style="margin-top: 8px; margin-left: 20px;">
+                <li>Chạy: <code>pip install -r requirements.txt</code></li>
+                <li>Chạy: <code>python scripts/download_images.py</code></li>
+                <li>Refresh trang này</li>
+            </ol>
+        </div>
+
+        <div class="stats" id="stats">
+            <!-- Stats will be populated by JavaScript -->
+        </div>
+
+        <div id="categories">
+            <!-- Categories will be populated by JavaScript -->
+        </div>
+
+        <footer>
+            <p>Quick Commerce Project - Phase 1: Database & Mock Data</p>
+        </footer>
+    </div>
+
+    <script>
+        // Product data from mock_data.sql
+        const CATEGORIES = {
+            "do-uong": {
+                name: "Đồ uống",
+                products: [
+                    { sku: "DRINK001", name: "Coca-Cola lon 330ml", price: 10000, original: 12000, unit: "lon" },
+                    { sku: "DRINK002", name: "Pepsi lon 330ml", price: 10000, original: 12000, unit: "lon" },
+                    { sku: "DRINK003", name: "Trà xanh 0 độ chai 500ml", price: 15000, unit: "chai" },
+                    { sku: "DRINK004", name: "Nước suối Lavie 500ml", price: 7000, original: 8000, unit: "chai" },
+                    { sku: "DRINK005", name: "Nước cam ép Teppy 1L", price: 32000, original: 35000, unit: "chai" },
+                    { sku: "DRINK006", name: "Cà phê lon Highlands 235ml", price: 18000, unit: "lon" },
+                    { sku: "DRINK007", name: "Red Bull 250ml", price: 20000, original: 22000, unit: "lon" },
+                    { sku: "DRINK008", name: "Sting dâu 330ml", price: 12000, unit: "lon" },
+                ]
+            },
+            "banh-keo": {
+                name: "Bánh kẹo",
+                products: [
+                    { sku: "SNACK001", name: "Bánh Oreo hộp 133g", price: 25000, original: 28000, unit: "hộp" },
+                    { sku: "SNACK002", name: "Chocopie hộp 6 cái", price: 35000, original: 38000, unit: "hộp" },
+                    { sku: "SNACK003", name: "Bánh mì sandwich Kinh Đô", price: 15000, unit: "gói" },
+                    { sku: "SNACK004", name: "Kẹo cao su Doublemint", price: 8000, unit: "thanh" },
+                    { sku: "SNACK005", name: "Snack khoai tây Pringles 110g", price: 50000, original: 55000, unit: "hộp" },
+                ]
+            },
+            "mi-an-lien": {
+                name: "Mì & Thực phẩm ăn liền",
+                products: [
+                    { sku: "NOODLE001", name: "Mì Hảo Hảo tôm chua cay", price: 4500, original: 5000, unit: "gói" },
+                    { sku: "NOODLE002", name: "Mì Omachi xốt Spaghetti", price: 8000, unit: "gói" },
+                    { sku: "NOODLE003", name: "Phở bò Vifon", price: 7000, unit: "gói" },
+                    { sku: "NOODLE004", name: "Cháo gà Cháo Tươi", price: 10000, original: 12000, unit: "gói" },
+                ]
+            },
+            "sua": {
+                name: "Sữa & Sản phẩm từ sữa",
+                products: [
+                    { sku: "MILK001", name: "Sữa tươi Vinamilk 180ml", price: 8000, unit: "hộp" },
+                    { sku: "MILK002", name: "Sữa TH True Milk 180ml", price: 8500, original: 9000, unit: "hộp" },
+                    { sku: "MILK003", name: "Sữa chua ăn Vinamilk", price: 7000, unit: "hộp" },
+                    { sku: "MILK004", name: "Sữa đặc Ông Thọ 380g", price: 25000, original: 28000, unit: "lon" },
+                ]
+            },
+            "ruou-bia": {
+                name: "Rượu bia",
+                products: [
+                    { sku: "ALCOHOL001", name: "Bia Heineken lon 330ml", price: 16000, original: 18000, unit: "lon", ageRestricted: true },
+                    { sku: "ALCOHOL002", name: "Bia Tiger lon 330ml", price: 14000, original: 15000, unit: "lon", ageRestricted: true },
+                    { sku: "ALCOHOL003", name: "Bia Saigon Special 330ml", price: 14000, unit: "lon", ageRestricted: true },
+                    { sku: "ALCOHOL004", name: "Soju Jinro 360ml", price: 80000, original: 85000, unit: "chai", ageRestricted: true },
+                ]
+            }
+        };
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+        }
+
+        // Build image path
+        function getImagePath(category, sku) {
+            return `../src/uploads/${category}/${sku}.jpg`;
+        }
+
+        // Render stats
+        function renderStats() {
+            let totalProducts = 0;
+            let totalCategories = Object.keys(CATEGORIES).length;
+            
+            Object.values(CATEGORIES).forEach(cat => {
+                totalProducts += cat.products.length;
+            });
+
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="number">${totalCategories}</div>
+                    <div class="label">Danh mục</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">${totalProducts}</div>
+                    <div class="label">Sản phẩm</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">78</div>
+                    <div class="label">Tổng SP (DB)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">100+</div>
+                    <div class="label">Lô hàng</div>
+                </div>
+            `;
+        }
+
+        // Render categories and products
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            let html = '';
+
+            Object.entries(CATEGORIES).forEach(([slug, category]) => {
+                html += `
+                    <div class="category-section">
+                        <div class="category-header">
+                            <h2>${category.name}</h2>
+                            <span class="category-badge">${category.products.length} sản phẩm</span>
+                        </div>
+                        <div class="products-grid">
+                            ${category.products.map(product => `
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="${getImagePath(slug, product.sku)}" 
+                                             alt="${product.name}"
+                                             onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'><svg xmlns=\\'http://www.w3.org/2000/svg\\' fill=\\'none\\' viewBox=\\'0 0 24 24\\' stroke=\\'currentColor\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'2\\' d=\\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\\' /></svg><span>Chưa có ảnh</span></div>'">
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-sku">${product.sku}</div>
+                                        <div class="product-name">${product.name}</div>
+                                        <div class="product-price">
+                                            ${formatPrice(product.price)}
+                                            ${product.original ? `<span class="original">${formatPrice(product.original)}</span>` : ''}
+                                        </div>
+                                        <div class="product-meta">
+                                            <span class="badge badge-unit">${product.unit}</span>
+                                            ${product.ageRestricted ? '<span class="badge badge-age">18+</span>' : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStats();
+            renderCategories();
+        });
+    </script>
+</body>
+</html>
