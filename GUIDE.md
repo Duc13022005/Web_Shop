@@ -1,500 +1,302 @@
 # 📖 HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG
 
-Hướng dẫn chi tiết từng bước để thiết lập và chạy Phase 1 của dự án Cửa Hàng Tiện Lợi.
+Hướng dẫn chi tiết để thiết lập và chạy dự án Quick Commerce.
+
+---
 
 ## 📋 Mục Lục
 
 - [Yêu Cầu Hệ Thống](#yêu-cầu-hệ-thống)
-- [Bước 1: Cài Đặt Môi Trường](#bước-1-cài-đặt-môi-trường)
-- [Bước 2: Khởi Động Database](#bước-2-khởi-động-database)
-- [Bước 3: Cài Đặt Python Dependencies](#bước-3-cài-đặt-python-dependencies)
-- [Bước 4: Tải Ảnh Sản Phẩm](#bước-4-tải-ảnh-sản-phẩm)
-- [Bước 5: Kiểm Tra Database](#bước-5-kiểm-tra-database)
-- [Bước 6: Xem Kết Quả](#bước-6-xem-kết-quả)
+- [Quick Start](#quick-start)
+- [Phase 1: Database](#phase-1-database)
+- [Phase 2: Backend API](#phase-2-backend-api)
+- [API Usage](#api-usage)
 - [Troubleshooting](#troubleshooting)
-- [Các Lệnh Hữu Ích](#các-lệnh-hữu-ích)
 
 ---
 
 ## 🖥️ Yêu Cầu Hệ Thống
 
-### Phần mềm bắt buộc
-
-| Phần mềm | Version | Link Download |
-|----------|---------|---------------|
-| **Docker Desktop** | 4.0+ | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop) |
-| **Python** | 3.10+ | [python.org/downloads](https://www.python.org/downloads/) |
-| **Git** | 2.0+ | [git-scm.com](https://git-scm.com/) |
-
-### Kiểm tra cài đặt
-
-```powershell
-# Kiểm tra Docker
-docker --version
-# Output: Docker version 24.x.x
-
-# Kiểm tra Python
-python --version
-# Output: Python 3.10.x
-
-# Kiểm tra Git
-git --version
-# Output: git version 2.x.x
-```
-
-### Yêu cầu phần cứng
-
-- RAM: Tối thiểu 4GB (khuyến nghị 8GB)
-- Disk: Tối thiểu 2GB trống
-- Internet: Cần để tải Docker images và ảnh sản phẩm
+| Phần mềm | Version | Bắt buộc |
+|----------|---------|----------|
+| Docker Desktop | 4.0+ | ✅ |
+| Git | 2.0+ | ✅ |
+| Python | 3.11+ | Chỉ cho development |
 
 ---
 
-## 📥 Bước 1: Cài Đặt Môi Trường
-
-### 1.1. Clone hoặc tải project
+## 🚀 Quick Start
 
 ```powershell
-# Nếu dùng Git
-git clone <repository-url>
+# 1. Clone project
+git clone <repo-url>
 cd Web_Shop
 
-# Hoặc download ZIP và giải nén
+# 2. Start all services
+docker-compose up -d
+
+# 3. Wait 30s for initialization...
+
+# 4. Access
+# API: http://localhost:8000
+# Swagger: http://localhost:8000/docs
+# Adminer: http://localhost:8080
 ```
-
-### 1.2. Tạo file .env
-
-File `.env` đã được tạo sẵn, nhưng bạn có thể tùy chỉnh:
-
-```powershell
-# Copy từ template (nếu cần)
-copy .env.example .env
-
-# Mở và chỉnh sửa nếu muốn đổi password
-notepad .env
-```
-
-**Nội dung .env:**
-```ini
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_DB=shop_db
-POSTGRES_USER=shop_user
-POSTGRES_PASSWORD=shop_password_123
-```
-
-> ⚠️ **Lưu ý**: Trong production, hãy đổi password mạnh hơn!
 
 ---
 
-## 🐘 Bước 2: Khởi Động Database
+## 🗄️ Phase 1: Database
 
-### 2.1. Đảm bảo Docker Desktop đang chạy
+### Services
+- **PostgreSQL**: Port 5433
+- **Adminer**: Port 8080
 
-Mở Docker Desktop và đợi nó khởi động hoàn tất.
-
-### 2.2. Khởi động PostgreSQL
+### Access Database
 
 ```powershell
-# Di chuyển đến thư mục project
-cd d:\DNU\Web_Shop
+# Via Adminer
+# URL: http://localhost:8080
+# System: PostgreSQL
+# Server: postgres
+# User: shop_user
+# Password: shop_password_123
+# Database: shop_db
 
-# Khởi động containers
+# Via CLI
+docker exec -it shop_db psql -U shop_user -d shop_db
+```
+
+### Mock Data
+- 6 Users (2 admin, 2 staff, 2 customers)
+- 10 Categories
+- 78 Products
+- 100+ Inventory Batches
+- 5 Sample Orders
+
+### Download Product Images
+
+```powershell
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Download images
+python scripts/download_images.py
+```
+
+---
+
+## ⚡ Phase 2: Backend API
+
+### Services
+- **Backend (FastAPI)**: Port 8000
+- **Redis**: Port 6379
+
+### API Documentation
+
+| URL | Description |
+|-----|-------------|
+| http://localhost:8000 | Health check |
+| http://localhost:8000/docs | Swagger UI |
+| http://localhost:8000/redoc | ReDoc |
+
+### Test Accounts
+
+| Email | Password | Role |
+|-------|----------|------|
+| admin@shop.vn | password123 | Admin |
+| staff1@shop.vn | password123 | Staff |
+| khach1@gmail.com | password123 | Customer |
+
+### Key Features
+
+1. **JWT Authentication**
+   - Access token: 30 minutes
+   - Refresh token: 7 days
+
+2. **Role-based Access**
+   - Customer: Cart, Orders
+   - Staff: + Products, Categories
+   - Admin: + Users, Inventory
+
+3. **FEFO Inventory**
+   - First Expired First Out
+   - Pessimistic Locking (no race conditions)
+
+4. **Alembic Migrations**
+   - Auto-run on container start
+
+---
+
+## 📝 API Usage
+
+### 1. Login
+
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "khach1@gmail.com", "password": "password123"}'
+```
+
+Response:
+```json
+{
+  "user": {"id": 5, "email": "khach1@gmail.com", ...},
+  "tokens": {
+    "access_token": "eyJ...",
+    "refresh_token": "eyJ...",
+    "token_type": "bearer"
+  }
+}
+```
+
+### 2. Get Products
+
+```bash
+curl http://localhost:8000/api/v1/products
+```
+
+### 3. Add to Cart (Authenticated)
+
+```bash
+curl -X POST http://localhost:8000/api/v1/cart/items \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"product_id": 1, "quantity": 2}'
+```
+
+### 4. Create Order
+
+```bash
+curl -X POST http://localhost:8000/api/v1/orders \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "delivery_address": "123 Nguyen Hue, Q1, TPHCM",
+    "customer_phone": "0901234567",
+    "customer_name": "Test Customer",
+    "payment_method": "cod"
+  }'
+```
+
+---
+
+## 🔧 Commands
+
+### Docker
+
+```powershell
+# Start
+docker-compose up -d
+
+# Stop
+docker-compose down
+
+# Rebuild (after code changes)
+docker-compose up -d --build
+
+# Logs
+docker-compose logs -f backend
+docker-compose logs -f postgres
+
+# Reset database
+docker-compose down -v
 docker-compose up -d
 ```
 
-**Output mong đợi:**
-```
-[+] Running 3/3
- ✔ Network web_shop_shop_network  Created
- ✔ Container shop_db              Started
- ✔ Container shop_adminer         Started
-```
-
-### 2.3. Kiểm tra containers đang chạy
+### Alembic Migrations
 
 ```powershell
-docker-compose ps
+# Auto-generate migration
+docker exec -it shop_backend alembic revision --autogenerate -m "description"
+
+# Apply migrations
+docker exec -it shop_backend alembic upgrade head
+
+# Rollback
+docker exec -it shop_backend alembic downgrade -1
+
+# History
+docker exec -it shop_backend alembic history
 ```
 
-**Output mong đợi:**
-```
-NAME            STATUS                   PORTS
-shop_adminer    Up                       0.0.0.0:8080->8080/tcp
-shop_db         Up (healthy)             0.0.0.0:5432->5432/tcp
-```
-
-### 2.4. Đợi database khởi tạo
-
-Lần đầu chạy, Docker sẽ:
-1. Tải PostgreSQL image (~150MB)
-2. Tạo database `shop_db`
-3. Chạy `init.sql` (tạo tables)
-4. Chạy `mock_data.sql` (insert data)
-
-Xem logs để theo dõi:
-```powershell
-docker-compose logs -f postgres
-```
-
-Đợi đến khi thấy:
-```
-LOG:  database system is ready to accept connections
-```
-
-Nhấn `Ctrl+C` để thoát logs.
-
----
-
-## 🐍 Bước 3: Cài Đặt Python Dependencies
-
-### 3.1. Tạo Virtual Environment (khuyến nghị)
+### Testing
 
 ```powershell
-# Tạo venv
-python -m venv venv
+# Run tests
+docker exec -it shop_backend pytest tests/ -v
 
-# Kích hoạt venv (Windows PowerShell)
-.\venv\Scripts\Activate.ps1
-
-# Hoặc Command Prompt
-.\venv\Scripts\activate.bat
-```
-
-### 3.2. Cài đặt packages
-
-```powershell
-pip install -r requirements.txt
-```
-
-**Packages sẽ được cài:**
-- `psycopg2-binary` - PostgreSQL driver
-- `bing-image-downloader` - Tải ảnh từ Bing
-- `python-dotenv` - Đọc file .env
-- `requests` - HTTP client
-- `Pillow` - Xử lý ảnh
-- `tabulate` - Hiển thị bảng trong terminal
-
----
-
-## 🖼️ Bước 4: Tải Ảnh Sản Phẩm
-
-### 4.1. Xem danh sách categories
-
-```powershell
-python scripts/download_images.py --list
-```
-
-**Output:**
-```
-📋 Danh sách categories:
-   - do-uong: 15 sản phẩm
-   - banh-keo: 10 sản phẩm
-   - mi-an-lien: 8 sản phẩm
-   ...
-```
-
-### 4.2. Chạy dry-run trước (tùy chọn)
-
-```powershell
-python scripts/download_images.py --dry-run
-```
-
-### 4.3. Tải ảnh
-
-```powershell
-# Tải tất cả categories
-python scripts/download_images.py
-
-# Hoặc tải từng category
-python scripts/download_images.py --category do-uong
-python scripts/download_images.py --category banh-keo
-```
-
-> ⏱️ **Thời gian**: Khoảng 5-15 phút tùy tốc độ mạng
-
-**Cấu trúc sau khi tải:**
-```
-src/uploads/
-├── do-uong/
-│   ├── DRINK001.jpg
-│   ├── DRINK002.jpg
-│   └── ...
-├── banh-keo/
-│   ├── SNACK001.jpg
-│   └── ...
-└── ...
-```
-
-### 4.4. Xử lý nếu tải lỗi
-
-Nếu Bing không trả về ảnh, script sẽ tự động tạo placeholder. Bạn có thể:
-
-1. **Thử lại**: `python scripts/download_images.py --category <tên>`
-2. **Tải manual**: Tìm ảnh và đặt vào thư mục với đúng tên SKU
-3. **Dọn dẹp temp**: `python scripts/download_images.py --cleanup`
-
----
-
-## ✅ Bước 5: Kiểm Tra Database
-
-### 5.1. Chạy test connection
-
-```powershell
-python scripts/test_connection.py
-```
-
-**Output mong đợi:**
-```
-============================================================
-🔗 KIỂM TRA KẾT NỐI DATABASE
-============================================================
-
-📡 Config:
-   Host: localhost
-   Port: 5432
-   Database: shop_db
-   User: shop_user
-
-✅ Kết nối thành công!
-   PostgreSQL: PostgreSQL 16.x
-
-============================================================
-📊 TỔNG QUAN DATABASE
-============================================================
-
-📋 Số lượng records:
-Table               Records
-----------------  ---------
-Users                     6
-Categories               10
-Products                 78
-Inventory Batches       100
-Orders                    5
-...
-```
-
-### 5.2. Xem chi tiết từng phần
-
-```powershell
-# Chỉ xem users
-python scripts/test_connection.py --users
-
-# Chỉ xem sản phẩm
-python scripts/test_connection.py --products
-
-# Chỉ xem tồn kho (FEFO)
-python scripts/test_connection.py --inventory
-
-# Kiểm tra ảnh
-python scripts/test_connection.py --images
-```
-
----
-
-## 👀 Bước 6: Xem Kết Quả
-
-### 6.1. Adminer (Database UI)
-
-Mở trình duyệt và truy cập:
-```
-http://localhost:8080
-```
-
-**Thông tin đăng nhập:**
-- System: PostgreSQL
-- Server: postgres (hoặc shop_db)
-- Username: shop_user
-- Password: shop_password_123
-- Database: shop_db
-
-### 6.2. Test Display HTML
-
-Mở file HTML trong trình duyệt:
-```powershell
-# Mở bằng trình duyệt mặc định
-start scripts\test_display.html
-```
-
-Trang web sẽ hiển thị:
-- Thống kê tổng quan
-- Danh sách sản phẩm theo category
-- Ảnh sản phẩm (nếu đã tải)
-
-### 6.3. Truy vấn SQL trực tiếp
-
-```powershell
-# Vào PostgreSQL shell
-docker exec -it shop_db psql -U shop_user -d shop_db
-
-# Một số query mẫu:
-SELECT * FROM categories;
-SELECT * FROM products LIMIT 10;
-SELECT * FROM v_products_with_stock LIMIT 10;
-
-# Thoát
-\q
+# Specific test
+docker exec -it shop_backend pytest tests/test_auth.py -v
 ```
 
 ---
 
 ## 🔧 Troubleshooting
 
-### Lỗi: Port 5432 đã được sử dụng
+### Port Already in Use
 
 ```powershell
-# Tìm process đang dùng port
-netstat -ano | findstr :5432
+# Find process using port
+netstat -ano | findstr :5433
+netstat -ano | findstr :8000
 
-# Đổi port trong .env
-POSTGRES_PORT=5433
-
-# Restart
-docker-compose down
-docker-compose up -d
+# Change port in .env or docker-compose.yml
 ```
 
-### Lỗi: Docker không chạy
+### Docker Not Running
 
-1. Mở Docker Desktop
-2. Đợi Docker khởi động (icon ở taskbar chuyển xanh)
-3. Thử lại `docker-compose up -d`
+1. Open Docker Desktop
+2. Wait for it to start
+3. Retry `docker-compose up -d`
 
-### Lỗi: Permission denied khi chạy PowerShell script
+### Backend Not Starting
 
 ```powershell
-# Cho phép chạy scripts
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+# Check logs
+docker-compose logs backend
+
+# Common issues:
+# - Database not ready: Wait 30s
+# - Import error: Check Python syntax
 ```
 
-### Lỗi: psycopg2 không cài được
+### Database Connection Failed
 
 ```powershell
-# Cài binary version
-pip install psycopg2-binary
-
-# Nếu vẫn lỗi, cài build tools
-# Download từ: https://visualstudio.microsoft.com/visual-cpp-build-tools/
-```
-
-### Lỗi: bing-image-downloader không hoạt động
-
-Script sẽ tự động tạo placeholder. Hoặc:
-```powershell
-# Cập nhật package
-pip install --upgrade bing-image-downloader
-
-# Nếu vẫn lỗi, tải ảnh manual và đặt vào src/uploads/{category}/{SKU}.jpg
-```
-
-### Reset database hoàn toàn
-
-```powershell
-# Dừng và xóa volume
-docker-compose down -v
-
-# Khởi động lại (sẽ chạy lại init.sql và mock_data.sql)
-docker-compose up -d
-```
-
----
-
-## 📝 Các Lệnh Hữu Ích
-
-### Docker
-
-```powershell
-# Khởi động
-docker-compose up -d
-
-# Dừng
-docker-compose down
-
-# Xem logs
-docker-compose logs -f
-
-# Restart
-docker-compose restart
-
-# Xem status
+# Check PostgreSQL
 docker-compose ps
+docker-compose logs postgres
 
-# Vào shell container
-docker exec -it shop_db bash
-
-# Vào PostgreSQL
-docker exec -it shop_db psql -U shop_user -d shop_db
-```
-
-### Python Scripts
-
-```powershell
-# Test connection - tất cả
-python scripts/test_connection.py
-
-# Test connection - chỉ summary
-python scripts/test_connection.py --summary
-
-# Download images - dry run
-python scripts/download_images.py --dry-run
-
-# Download images - một category
-python scripts/download_images.py -c do-uong
-
-# Download images - tất cả
-python scripts/download_images.py
-```
-
-### PostgreSQL CLI
-
-```sql
--- Liệt kê tables
-\dt
-
--- Mô tả table
-\d products
-
--- Xem categories với số sản phẩm
-SELECT c.name, COUNT(p.id) 
-FROM categories c 
-LEFT JOIN products p ON c.id = p.category_id 
-GROUP BY c.name;
-
--- Xem sản phẩm sắp hết hạn
-SELECT p.name, ib.expiry_date, ib.quantity_on_hand 
-FROM inventory_batches ib 
-JOIN products p ON ib.product_id = p.id 
-WHERE ib.expiry_date < CURRENT_DATE + INTERVAL '30 days'
-ORDER BY ib.expiry_date;
-
--- Xem view products với stock
-SELECT * FROM v_products_with_stock LIMIT 10;
+# Reset if needed
+docker-compose down -v
+docker-compose up -d
 ```
 
 ---
 
-## ✅ Checklist Hoàn Thành Phase 1
+## ✅ Checklist
 
-- [ ] Docker Desktop đã cài đặt và chạy
-- [ ] `docker-compose up -d` thành công
-- [ ] `pip install -r requirements.txt` thành công
-- [ ] `python scripts/test_connection.py` hiển thị data
-- [ ] `python scripts/download_images.py` hoàn thành
-- [ ] Adminer có thể truy cập tại `localhost:8080`
-- [ ] `test_display.html` hiển thị sản phẩm với ảnh
+### Phase 1
+- [ ] Docker Desktop installed
+- [ ] `docker-compose up -d` successful
+- [ ] Adminer accessible at :8080
+- [ ] Mock data loaded
 
----
-
-## 🚀 Tiếp Theo: Phase 2
-
-Sau khi hoàn thành Phase 1, chuyển sang Phase 2 để xây dựng Backend API với FastAPI:
-
-- Tạo project structure
-- Implement Authentication (JWT)
-- Xây dựng CRUD APIs
-- Implement Business Logic (Orders, Inventory FEFO)
-- Unit Testing
+### Phase 2
+- [ ] Backend running at :8000
+- [ ] Swagger UI accessible at :8000/docs
+- [ ] Login working
+- [ ] Create order working
 
 ---
 
-📧 **Cần hỗ trợ?** Tạo issue trên repository hoặc liên hệ giảng viên.
+## 🚀 Next: Phase 3 (Frontend)
+
+- React.js with Vite
+- Customer Portal
+- Staff Dashboard
+- Admin Panel
+
+---
+
+📧 **Need help?** Create an issue or contact instructor.

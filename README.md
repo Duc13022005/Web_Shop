@@ -2,155 +2,74 @@
 
 Dự án website cửa hàng tiện lợi với mô hình Quick Commerce, hỗ trợ đặt hàng online, quản lý kho hàng, và bán hàng đa kênh.
 
-![Version](https://img.shields.io/badge/version-1.0.0--phase1-blue)
-![Python](https://img.shields.io/badge/python-3.10+-green)
+![Version](https://img.shields.io/badge/version-2.0.0--phase2-blue)
+![Python](https://img.shields.io/badge/python-3.11+-green)
+![FastAPI](https://img.shields.io/badge/fastapi-0.109-teal)
 ![PostgreSQL](https://img.shields.io/badge/postgresql-16-blue)
-![License](https://img.shields.io/badge/license-MIT-orange)
 
 ## 📋 Mục Lục
 
-- [Tổng Quan](#tổng-quan)
 - [Tính Năng](#tính-năng)
 - [Tech Stack](#tech-stack)
-- [Cấu Trúc Project](#cấu-trúc-project)
-- [Cài Đặt](#cài-đặt)
-- [Sử Dụng](#sử-dụng)
-- [Database Schema](#database-schema)
-- [Phases Phát Triển](#phases-phát-triển)
+- [Quick Start](#quick-start)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
 
-## 🎯 Tổng Quan
-
-Hệ thống Quick Commerce cho cửa hàng tiện lợi, phục vụ:
-
-| Vai trò | Chức năng |
-|---------|-----------|
-| **Khách hàng** | Đặt hàng online, theo dõi đơn hàng, thanh toán |
-| **Nhân viên (Staff)** | Quản lý mặt hàng, xử lý đơn hàng, bán hàng POS |
-| **Quản trị (Admin)** | Quản lý kho, quản lý người dùng, báo cáo |
-
-### Đặc thù Quick Commerce
-
-- ⚡ **Giao hàng nhanh** - Dưới 30-60 phút
-- 📦 **Quản lý lô hàng (FEFO)** - First Expired First Out
-- 🔄 **Real-time Inventory** - Cập nhật tồn kho tức thì
-- 🔞 **Age Verification** - Kiểm soát sản phẩm hạn chế độ tuổi
+---
 
 ## ✨ Tính Năng
 
-### Phase 1 (Hiện tại) ✅
-- [x] Database PostgreSQL với Docker
-- [x] Schema thiết kế theo FEFO
-- [x] Mock data tiếng Việt (78 sản phẩm, 10 danh mục)
-- [x] Script cào ảnh sản phẩm
-- [x] Test connection và display
+### Phase 1 ✅ Database & Mock Data
+- PostgreSQL với Docker
+- Schema FEFO (First Expired First Out)
+- 78 sản phẩm, 10 danh mục (tiếng Việt)
+- Script cào ảnh sản phẩm
 
-### Phase 2 (Sắp tới)
-- [ ] FastAPI Backend
-- [ ] RESTful API
-- [ ] JWT Authentication
-- [ ] Business Logic (Orders, Inventory)
+### Phase 2 ✅ Backend API
+- FastAPI RESTful API
+- JWT Authentication
+- Role-based Access Control (Customer, Staff, Admin)
+- CRUD: Categories, Products, Users
+- Inventory Management với FEFO & Pessimistic Locking
+- Order Processing với Stock Allocation
+- Alembic Migrations
 
-### Phase 3
-- [ ] React Frontend
-- [ ] Customer Portal
-- [ ] Staff Dashboard
-- [ ] Admin Panel
-
-### Phase 4
-- [ ] Integration Testing
-- [ ] Cloud Deployment
+---
 
 ## 🛠 Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| **Database** | PostgreSQL 16 (Docker) |
-| **Backend** | Python 3.10+, FastAPI (Phase 2) |
-| **Frontend** | React, Vite (Phase 3) |
-| **Containerization** | Docker, Docker Compose |
-| **Other** | Redis (caching), Adminer (DB UI) |
+| **API** | FastAPI + Uvicorn |
+| **Database** | PostgreSQL 16 (async) |
+| **ORM** | SQLAlchemy 2.0 + asyncpg |
+| **Cache** | Redis 7 |
+| **Auth** | JWT (python-jose) |
+| **Container** | Docker Compose |
 
-## 📁 Cấu Trúc Project
+---
 
-```
-Web_Shop/
-├── 📄 docker-compose.yml      # Docker services configuration
-├── 📄 requirements.txt        # Python dependencies
-├── 📄 .env                    # Environment variables (local)
-├── 📄 .env.example           # Environment template
-├── 📄 .gitignore
-├── 📄 README.md              # This file
-├── 📄 GUIDE.md               # Detailed setup guide
-│
-├── 📁 database/
-│   ├── 📄 init.sql           # Database schema
-│   └── 📄 mock_data.sql      # Vietnamese mock data
-│
-├── 📁 scripts/
-│   ├── 📄 download_images.py  # Image downloader
-│   ├── 📄 test_connection.py  # Database test
-│   └── 📄 test_display.html   # Visual test page
-│
-└── 📁 src/
-    └── 📁 uploads/            # Product images
-        ├── 📁 do-uong/
-        ├── 📁 banh-keo/
-        └── ...
-```
+## 🚀 Quick Start
 
-## 🚀 Cài Đặt
-
-### Yêu Cầu
-
+### Prerequisites
 - Docker Desktop
-- Python 3.10+
 - Git
 
-### Quick Start
+### Run
 
 ```powershell
-# 1. Clone repository
+# Clone
 git clone <repo-url>
 cd Web_Shop
 
-# 2. Start PostgreSQL
+# Start all services
 docker-compose up -d
 
-# 3. Install Python dependencies
-pip install -r requirements.txt
-
-# 4. Download product images
-python scripts/download_images.py
-
-# 5. Test database connection
-python scripts/test_connection.py
+# Wait for services...
+# API: http://localhost:8000
+# Swagger: http://localhost:8000/docs
+# Adminer: http://localhost:8080
 ```
-
-> 📖 Xem chi tiết tại [GUIDE.md](./GUIDE.md)
-
-## 💾 Database Schema
-
-### ERD Overview
-
-```
-users ──────────┬──────────── orders
-                │                │
-                │                ├── order_items
-                │                │       │
-categories ─── products ────────┴─── inventory_batches
-                │
-                └── cart_items ── carts
-```
-
-### Key Tables
-
-| Table | Mô tả | Records |
-|-------|-------|---------|
-| `users` | Người dùng (customer, staff, admin) | 6 |
-| `categories` | Danh mục sản phẩm | 10 |
-| `products` | Sản phẩm | 78 |
-| `inventory_batches` | Lô hàng (FEFO) | 100+ |
-| `orders` | Đơn hàng | 5 (sample) |
 
 ### Test Accounts
 
@@ -160,67 +79,78 @@ categories ─── products ────────┴─── inventory_bat
 | staff1@shop.vn | password123 | Staff |
 | khach1@gmail.com | password123 | Customer |
 
-## 📊 Mock Data
+---
 
-### Danh mục sản phẩm
+## 📚 API Documentation
 
-1. 🥤 Đồ uống (15 sản phẩm)
-2. 🍪 Bánh kẹo (10 sản phẩm)
-3. 🍜 Mì & Thực phẩm ăn liền (8 sản phẩm)
-4. 🥛 Sữa & Sản phẩm từ sữa (8 sản phẩm)
-5. 🧊 Đồ đông lạnh (6 sản phẩm)
-6. 🧂 Gia vị & Nước chấm (8 sản phẩm)
-7. 🧴 Chăm sóc cá nhân (8 sản phẩm)
-8. 🧹 Đồ gia dụng (6 sản phẩm)
-9. 🍺 Rượu bia (5 sản phẩm) - **18+**
-10. 🚬 Thuốc lá (4 sản phẩm) - **18+**
+### Endpoints Summary
 
-### FEFO (First Expired First Out)
+| Module | Prefix | Endpoints |
+|--------|--------|-----------|
+| Auth | `/api/v1/auth` | register, login, refresh, me |
+| Users | `/api/v1/users` | CRUD (admin only) |
+| Categories | `/api/v1/categories` | list, get, create, update, delete |
+| Products | `/api/v1/products` | list, get, create, update, delete, upload image |
+| Inventory | `/api/v1/inventory` | overview, batches, low-stock, expiring |
+| Cart | `/api/v1/cart` | get, add, update, remove, clear |
+| Orders | `/api/v1/orders` | list, get, create, update status, cancel |
 
-Mỗi sản phẩm có thể có nhiều lô hàng với:
-- `batch_code`: Mã lô
-- `expiry_date`: Ngày hết hạn (sort để xuất trước)
-- `quantity_on_hand`: Số lượng thực tế
-- `quantity_reserved`: Số lượng đã giữ chỗ
-- `location`: Vị trí trong kho
+### Interactive Docs
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+---
+
+## 📁 Project Structure
+
+```
+Web_Shop/
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+├── alembic.ini
+├── alembic/                  # Migrations
+├── database/
+│   ├── init.sql
+│   └── mock_data.sql
+├── src/
+│   ├── main.py              # FastAPI app
+│   ├── core/                # Config, DB, Security
+│   ├── models/              # All models registry
+│   ├── auth/                # Authentication
+│   ├── users/               # Users CRUD
+│   ├── catalog/             # Categories, Products
+│   ├── inventory/           # FEFO, Locking
+│   └── orders/              # Cart, Orders
+└── scripts/                 # Utilities
+```
+
+---
 
 ## 🔧 Commands
 
 ```powershell
-# Start database
+# Start
 docker-compose up -d
 
-# Stop database
+# Stop
 docker-compose down
 
-# View logs
-docker-compose logs -f postgres
+# Logs
+docker-compose logs -f backend
 
-# Access database shell
+# Run migrations
+docker exec -it shop_backend alembic upgrade head
+
+# Database shell
 docker exec -it shop_db psql -U shop_user -d shop_db
-
-# Reset database (delete + recreate)
-docker-compose down -v
-docker-compose up -d
 ```
 
-## 📚 Documentation
+---
 
-- [GUIDE.md](./GUIDE.md) - Hướng dẫn chi tiết từng bước
-- [database/init.sql](./database/init.sql) - Database schema
-- [database/mock_data.sql](./database/mock_data.sql) - Mock data
+## 📖 Documentation
 
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-Distributed under the MIT License.
+- [GUIDE.md](./GUIDE.md) - Hướng dẫn chi tiết
 
 ---
 
