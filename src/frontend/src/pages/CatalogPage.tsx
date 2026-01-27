@@ -63,9 +63,14 @@ export default function CatalogPage() {
 
                 // If using server side filtering, we use res.items.
                 // If client side filtering for price (smoother slider), we filter here.
-                let items = res.items || [];
+                // Mapping: Backend (current_price) -> Frontend (price)
+                let items = (res.items || []).map((p: any) => ({
+                    ...p,
+                    price: Number(p.current_price || p.base_price || 0),
+                    images: p.image_path ? [p.image_path.startsWith('http') ? p.image_path : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/uploads/${p.image_path}`] : []
+                }));
 
-                // Client-side Price Filter (since we want smooth slider)
+                // Client-side Price Filter
                 items = items.filter((p: any) => p.price <= priceRange);
 
                 setProducts(items);

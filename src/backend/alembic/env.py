@@ -13,9 +13,9 @@ from alembic import context
 import sys
 sys.path.insert(0, ".")
 
-from src.core.config import settings
-from src.core.database import Base
-from src.models import *  # Import all models to register them
+from core.config import settings
+from core.database import Base
+from models import *  # Import all models to register them
 
 # Alembic Config object
 config = context.config
@@ -75,3 +75,4 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+

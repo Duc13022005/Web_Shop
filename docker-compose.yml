@@ -47,6 +47,9 @@ services:
     volumes:
       - ./src/backend:/app
     environment:
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_DB=${POSTGRES_DB:-shop_db}
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-shop_db}
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
@@ -58,7 +61,7 @@ services:
         condition: service_healthy
     networks:
       - app_network
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:

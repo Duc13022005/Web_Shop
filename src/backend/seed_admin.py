@@ -7,18 +7,19 @@ import os
 sys.path.append(os.getcwd())
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from src.users.service import UserService
-from src.users.schemas import UserCreate
-from src.users.models import UserRole
+from users.service import UserService
+from users.schemas import UserCreate
+from users.models import UserRole
 
 # Local host connection string
-LOCAL_DB_URL = "postgresql+asyncpg://shop_user:shop_password_123@localhost:5433/shop_db"
+# Database Connection String
+DB_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://shop_user:shop_password_123@localhost:5433/shop_db")
 
 async def seed():
-    print(f"🚀 Connecting to database at: {LOCAL_DB_URL.replace('shop_password_123', '***')}")
+    print(f"🚀 Connecting to database at: {DB_URL.replace('shop_password_123', '***')}")
     
     # Create isolated engine/session for this script
-    engine = create_async_engine(LOCAL_DB_URL)
+    engine = create_async_engine(DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
     
     async with async_session() as db:
@@ -54,3 +55,4 @@ if __name__ == "__main__":
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(seed())
+

@@ -7,12 +7,12 @@ import os
 sys.path.append(os.getcwd())
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from src.auth.service import AuthService
-from src.core.security import verify_password, get_password_hash
-from src.users.service import UserService
+from auth.service import AuthService
+from core.security import verify_password, get_password_hash
+from users.service import UserService
 # Import other models to ensure SQLAlchemy registry is populated for relationships
-from src.orders.models import Order
-from src.catalog.models import Product, Category
+from orders.models import Order
+from catalog.models import Product, Category
 
 # Local host connection string
 LOCAL_DB_URL = "postgresql+asyncpg://shop_user:shop_password_123@localhost:5433/shop_db"
@@ -59,3 +59,4 @@ if __name__ == "__main__":
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(test_auth())
+

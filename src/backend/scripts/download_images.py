@@ -40,7 +40,7 @@ load_dotenv()
 
 # Configuration
 BASE_DIR = Path(__file__).parent.parent
-UPLOADS_DIR = BASE_DIR / "src" / "uploads"
+UPLOADS_DIR = BASE_DIR / "uploads"
 TEMP_DIR = BASE_DIR / "temp_images"
 
 # Số ảnh tải cho mỗi sản phẩm

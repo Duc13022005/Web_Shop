@@ -6,10 +6,10 @@ import os
 # Add project root to path
 sys.path.append(os.getcwd())
 
-from src.core.database import async_session_maker
-from src.users.service import UserService
-from src.users.schemas import UserCreate
-from src.users.models import UserRole
+from core.database import async_session_maker
+from users.service import UserService
+from users.schemas import UserCreate
+from users.models import UserRole
 
 async def seed():
     print("🚀 Seeding Data...")
@@ -38,3 +38,4 @@ if __name__ == "__main__":
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(seed())
+

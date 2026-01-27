@@ -2,7 +2,7 @@
 set -e
 
 echo "🔄 Waiting for PostgreSQL..."
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U shop_user -d shop_db -c '\q' 2>/dev/null; do
+until PGPASSWORD=${POSTGRES_PASSWORD:-password} psql -h db -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-shop_db} -c '\q' 2>/dev/null; do
     echo "   PostgreSQL is unavailable - sleeping"
     sleep 2
 done

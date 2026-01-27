@@ -7,9 +7,9 @@ import os
 sys.path.append(os.getcwd())
 
 from sqlalchemy import select
-from src.core.database import async_session_maker
-from src.models import User
-from src.core.security import get_password_hash
+from core.database import async_session_maker
+from models import User
+from core.security import get_password_hash
 
 async def update_passwords():
     print("🔄 Updating passwords to Argon2 hashes...")
@@ -32,3 +32,4 @@ async def update_passwords():
 
 if __name__ == "__main__":
     asyncio.run(update_passwords())
+
