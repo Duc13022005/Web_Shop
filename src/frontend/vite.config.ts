@@ -15,6 +15,13 @@ export default defineConfig({
         host: true, // Needed for Docker
         watch: {
             usePolling: true, // Needed for some Docker environments (Windows)
+        },
+        proxy: {
+            '/api/v1': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                secure: false,
+            }
         }
     }
 })

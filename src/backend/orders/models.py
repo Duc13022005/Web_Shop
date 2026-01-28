@@ -5,7 +5,7 @@ Orders SQLAlchemy Models - Order, OrderItem, Cart, CartItem
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional, List, TYPE_CHECKING
-from sqlalchemy import String, Boolean, Text, Numeric, Integer, ForeignKey, Enum as SQLEnum
+from sqlalchemy import String, Boolean, Text, Numeric, Integer, ForeignKey, Enum as SQLEnum, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
 
@@ -138,6 +138,9 @@ class Cart(Base):
 class CartItem(Base):
     """Cart item model"""
     __tablename__ = "cart_items"
+    __table_args__ = (
+        UniqueConstraint("cart_id", "product_id", name="uq_cart_item_product"),
+    )
     
     id: Mapped[int] = mapped_column(primary_key=True)
     cart_id: Mapped[int] = mapped_column(ForeignKey("carts.id"), index=True)

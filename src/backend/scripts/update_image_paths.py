@@ -37,8 +37,8 @@ async def update_image_paths():
             
             cat_slug = product.category.slug
             expected_filename = f"{product.sku}.jpg"
-            # In DB we want relative path: "category_slug/sku.jpg"
-            image_path = f"{cat_slug}/{expected_filename}"
+            # In DB we want absolute path relative to domain: "/uploads/category_slug/sku.jpg"
+            image_path = f"/uploads/{cat_slug}/{expected_filename}"
             
             if product.image_path != image_path:
                 print(f"   🔄 Updating {product.sku}: {product.image_path} -> {image_path}")

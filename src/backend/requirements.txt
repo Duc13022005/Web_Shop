@@ -2,10 +2,10 @@
 # Phase 1 - Database & Scripts (Already installed)
 # ==============================================================================
 
-# Database
-psycopg2-binary==2.9.9
-
-# Image Downloading
+# Database & Scripts
+psycopg2-binary
+alembic
+asyncpg
 bing-image-downloader==1.1.2
 requests==2.31.0
 Pillow==10.2.0

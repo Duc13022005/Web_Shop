@@ -4,7 +4,7 @@ Catalog Pydantic Schemas
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -68,6 +68,8 @@ class ProductBase(BaseModel):
     is_active: bool = True
     is_age_restricted: bool = False
     min_age: int = Field(default=0, ge=0)
+    images: Optional[List[str]] = Field(default_factory=list)
+    specifications: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
 class ProductCreate(ProductBase):
@@ -87,6 +89,8 @@ class ProductUpdate(BaseModel):
     is_active: Optional[bool] = None
     is_age_restricted: Optional[bool] = None
     min_age: Optional[int] = Field(None, ge=0)
+    images: Optional[List[str]] = None
+    specifications: Optional[Dict[str, Any]] = None
 
 
 class ProductResponse(ProductBase):

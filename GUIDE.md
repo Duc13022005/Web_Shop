@@ -1,4 +1,5 @@
-# 📖 HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG
+
+HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG
 
 Hướng dẫn chi tiết để thiết lập và chạy dự án Quick Commerce.
 
@@ -8,6 +9,7 @@ Hướng dẫn chi tiết để thiết lập và chạy dự án Quick Commerce
 
 - [Yêu Cầu Hệ Thống](#yêu-cầu-hệ-thống)
 - [Quick Start](#quick-start)
+- [Public Access (Ngrok)](#-public-access-ngrok)
 - [Phase 1: Database](#phase-1-database)
 - [Phase 2: Backend API](#phase-2-backend-api)
 - [API Usage](#api-usage)
@@ -41,6 +43,32 @@ docker-compose up -d
 # API: http://localhost:8000
 # Swagger: http://localhost:8000/docs
 # Adminer: http://localhost:8080
+```
+
+---
+
+## 🌐 Public Access (Ngrok)
+
+Để người khác có thể truy cập website của bạn từ xa (thông qua Internet), bạn có thể dùng **Ngrok**.
+
+### 1. Kiểm tra Ngrok
+Mở terminal và gõ lệnh sau để xem máy đã có ngrok chưa:
+```powershell
+ngrok --version
+```
+Nếu hiện phiên bản (ví dụ `ngrok version 3.x`), bạn đã cài đặt thành công.
+
+### 2. Public Website
+Chạy lệnh sau để public website (Port 80):
+```powershell
+ngrok http 80
+```
+Sau đó, copy đường dẫn có dạng `https://xxxx-xxxx.ngrok-free.app` gửi cho người khác.
+
+### 3. Public API (Backend)
+Nếu muốn test API từ xa, chạy lệnh sau ở 1 terminal khác:
+```powershell
+ngrok http 8000
 ```
 
 ---

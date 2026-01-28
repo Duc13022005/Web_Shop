@@ -5,7 +5,7 @@ Catalog SQLAlchemy Models - Category and Product
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional, List, TYPE_CHECKING
-from sqlalchemy import String, Boolean, Text, Numeric, Integer, ForeignKey
+from sqlalchemy import String, Boolean, Text, Numeric, Integer, ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
@@ -48,6 +48,8 @@ class Product(Base):
     sale_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 2), nullable=True)
     unit: Mapped[str] = mapped_column(String(50), default="cái")
     image_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    images: Mapped[Optional[List[str]]] = mapped_column(JSON, default=list)
+    specifications: Mapped[Optional[dict]] = mapped_column(JSON, default=dict)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_age_restricted: Mapped[bool] = mapped_column(Boolean, default=False)
     min_age: Mapped[int] = mapped_column(Integer, default=0)

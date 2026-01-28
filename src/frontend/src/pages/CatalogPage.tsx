@@ -64,10 +64,19 @@ export default function CatalogPage() {
                 // If using server side filtering, we use res.items.
                 // If client side filtering for price (smoother slider), we filter here.
                 // Mapping: Backend (current_price) -> Frontend (price)
+                // Mapping: Backend (current_price) -> Frontend (price)
                 let items = (res.items || []).map((p: any) => ({
                     ...p,
                     price: Number(p.current_price || p.base_price || 0),
-                    images: p.image_path ? [p.image_path.startsWith('http') ? p.image_path : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/uploads/${p.image_path}`] : []
+                    // Use path as-is since it already contains /uploads/ from DB, or construct if needed.
+                    // If p.image_path starts with http, use it.
+                    // If p.image_path starts with /, use it as relative path (browser resolves to current origin).
+                    // Fallback to prepending /uploads/ if it's just a filename.
+                    images: p.image_path
+                        ? [p.image_path.startsWith('http') || p.image_path.startsWith('/')
+                            ? p.image_path
+                            : `/uploads/${p.image_path}`]
+                        : []
                 }));
 
                 // Client-side Price Filter
