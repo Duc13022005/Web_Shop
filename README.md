@@ -49,35 +49,45 @@ Dự án website cửa hàng tiện lợi với mô hình Quick Commerce, hỗ t
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Hướng Dẫn Chạy (Đơn Giản Nhất)
 
-### Prerequisites
-- Docker Desktop
-- Git
+Bạn chỉ cần làm theo 3 bước sau là chạy được ngay website:
 
-### Run
+### Bước 1: Cài đặt phần mềm
+- Tải và cài đặt **Docker Desktop** tại đây: [Download Docker](https://www.docker.com/products/docker-desktop/)
+- Sau khi cài xong, hãy **mở Docker Desktop lên** và chờ nó khởi động (có icon cá voi màu xanh ở góc màn hình).
 
-```powershell
-# Clone
-git clone <repo-url>
-cd Web_Shop
+### Bước 2: Tải và chạy Code
+1. Tải code này về máy tính (nếu tải file Zip thì hãy giải nén ra).
+2. Vào thư mục chứa code (thư mục `Web_Shop`).
+3. Tìm file `.env.example`, copy và đổi tên thành `.env` (nếu chưa có).
+4. Chuột phải vào khoảng trắng trong thư mục, chọn **"Open Terminal Here"** (hoặc mở CMD/PowerShell).
+5. Gõ lệnh sau rồi ấn Enter:
+   ```powershell
+   docker-compose up -d
+   ```
+   *(Lệnh này sẽ tự động tải mọi thứ cần thiết về, bạn chỉ cần chờ khoảng 5-10 phút cho lần đầu tiên)*.
 
-# Start all services
-docker-compose up -d
+### Bước 3: Truy cập Website
+Sau khi chạy xong, hãy mở trình duyệt và trải nghiệm:
 
-# Wait for services...
-# API: http://localhost:8000
-# Swagger: http://localhost:8000/docs
-# Adminer: http://localhost:8080
-```
+- **Trang web bán hàng**: [http://localhost](http://localhost)
+- **Tài liệu API (Cho Dev)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Quản lý Database**: [http://localhost:8080](http://localhost:8080)
+  - Hệ thống: `PostgreSQL`
+  - Server: `db`
+  - User: `shop_user`
+  - Password: `shop_password_123`
+  - Database: `shop_db`
 
-### Test Accounts
+### Tài khoản đăng nhập mẫu
+| Vai trò | Email | Mật khẩu | Mô tả |
+|---|---|---|---|
+| Admin | `admin@shop.vn` | `password123` | Quản trị viên cao nhất |
+| Staff | `staff1@shop.vn` | `password123` | Nhân viên quản lý đơn hàng |
+| Customer | `khach1@gmail.com` | `password123` | Khách hàng mua sắm |
 
-| Email | Password | Role |
-|-------|----------|------|
-| admin@shop.vn | password123 | Admin |
-| staff1@shop.vn | password123 | Staff |
-| khach1@gmail.com | password123 | Customer |
+**Lưu ý:** Để tắt website, hãy gõ lệnh: `docker-compose down`
 
 ---
 
