@@ -1,4 +1,4 @@
-# Import database data
+# Import database data using docker cp to avoid encoding issues
 Write-Host "Importing database data from src/db/dump.sql..."
 
 if (-not (Test-Path "src/db/dump.sql")) {
@@ -6,13 +6,14 @@ if (-not (Test-Path "src/db/dump.sql")) {
     exit 1
 }
 
-# Clear existing data might be risky, but 'init.sql' creates schema. 
-# Usually we append? Or truncate?
-# For now, we assume a fresh DB or the user wants to populate data.
-# Note: Foreign key constraints might cause issues if we don't truncate in order.
-# A safer way requires -c (clean) in pg_dump, but we used --data-only.
+# 1. Copy file from host to container temp
+docker cp src/db/dump.sql db:/tmp/dump.sql
 
-Get-Content src/db/dump.sql | docker exec -i db psql -U shop_user -d shop_db
+# 2. Execute psql using the file inside container
+docker exec db psql -U shop_user -d shop_db -f /tmp/dump.sql
+
+# 3. Clean up
+docker exec db rm /tmp/dump.sql
 
 if ($?) {
     Write-Host "Import successful."

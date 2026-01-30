@@ -173,9 +173,23 @@ Nếu bạn muốn export dữ liệu hiện tại hoặc import dữ liệu t�
 - **Export Data**: Chạy file `scripts/export_db.ps1` (Dữ liệu sẽ được lưu vào `src/db/dump.sql`)
 - **Import Data**: Chạy file `scripts/import_db.ps1` (Sẽ import từ `src/db/dump.sql` vào database)
 
-**Cách 2: Chạy lệnh thủ công**
-- Export: `docker exec db pg_dump -U shop_user -d shop_db --data-only --column-inserts > src/db/dump.sql`
-- Import: `cat src/db/dump.sql | docker exec -i db psql -U shop_user -d shop_db`
+**Cách 2: Chạy lệnh thủ công (Nếu script lỗi)**
+1. **Export**:
+   ```bash
+   # Trong container Linux (đảm bảo UTF-8)
+   docker exec db pg_dump -U shop_user -d shop_db --data-only --column-inserts -f /tmp/dump.sql
+   # Copy ra ngoài
+   docker cp db:/tmp/dump.sql src/db/dump.sql
+   ```
+
+2. **Import**:
+   ```bash
+   # Copy vào container
+   docker cp src/db/dump.sql db:/tmp/dump.sql
+   # Chạy lệnh import
+   docker exec db psql -U shop_user -d shop_db -f /tmp/dump.sql
+   ```
+
 
 
 ### 2. Cập nhật Hình Ảnh Sản Phẩm
