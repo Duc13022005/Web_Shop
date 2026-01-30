@@ -12,7 +12,7 @@ if (-not (Test-Path "src/db/dump.sql")) {
 # Note: Foreign key constraints might cause issues if we don't truncate in order.
 # A safer way requires -c (clean) in pg_dump, but we used --data-only.
 
-Get-Content src/db/dump.sql | docker exec -i shop_db psql -U shop_user -d shop_db
+Get-Content src/db/dump.sql | docker exec -i db psql -U shop_user -d shop_db
 
 if ($?) {
     Write-Host "Import successful."

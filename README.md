@@ -174,8 +174,9 @@ Nếu bạn muốn export dữ liệu hiện tại hoặc import dữ liệu t�
 - **Import Data**: Chạy file `scripts/import_db.ps1` (Sẽ import từ `src/db/dump.sql` vào database)
 
 **Cách 2: Chạy lệnh thủ công**
-- Export: `docker exec shop_db pg_dump -U shop_user -d shop_db --data-only --column-inserts > src/db/dump.sql`
-- Import: `cat src/db/dump.sql | docker exec -i shop_db psql -U shop_user -d shop_db`
+- Export: `docker exec db pg_dump -U shop_user -d shop_db --data-only --column-inserts > src/db/dump.sql`
+- Import: `cat src/db/dump.sql | docker exec -i db psql -U shop_user -d shop_db`
+
 
 ### 2. Cập nhật Hình Ảnh Sản Phẩm
 Vì ảnh sản phẩm không được lưu trên Git, bạn cần tải thủ công bộ ảnh chuẩn:
