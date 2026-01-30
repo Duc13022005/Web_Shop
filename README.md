@@ -164,4 +164,31 @@ docker exec -it shop_db psql -U shop_user -d shop_db
 
 ---
 
+## 📦 Hướng Dẫn Nâng Cao (Data & Images)
+
+### 1. Đồng bộ Dữ Liệu (Database)
+Nếu bạn muốn export dữ liệu hiện tại hoặc import dữ liệu từ máy khác:
+
+**Cách 1: Sử dụng Script (Khuyên dùng)**
+- **Export Data**: Chạy file `scripts/export_db.ps1` (Dữ liệu sẽ được lưu vào `src/db/dump.sql`)
+- **Import Data**: Chạy file `scripts/import_db.ps1` (Sẽ import từ `src/db/dump.sql` vào database)
+
+**Cách 2: Chạy lệnh thủ công**
+- Export: `docker exec shop_db pg_dump -U shop_user -d shop_db --data-only --column-inserts > src/db/dump.sql`
+- Import: `cat src/db/dump.sql | docker exec -i shop_db psql -U shop_user -d shop_db`
+
+### 2. Cập nhật Hình Ảnh Sản Phẩm
+Vì ảnh sản phẩm không được lưu trên Git, bạn cần tải thủ công bộ ảnh chuẩn:
+
+1. **Tải ảnh**: Truy cập [Google Drive Folder](https://drive.google.com/drive/folders/1KKtFYXZQZdfCZYVtMwJn_6NbCmOg6NeP?usp=sharing)
+2. **Giải nén/Copy**:
+   - Copy toàn bộ các file ảnh vào thư mục: `src/backend/uploads/`
+   - *Lưu ý*: Nếu thư mục `src/backend/uploads/` chưa có, hãy tạo mới nó.
+   - Cấu trúc đúng sẽ là: `src/backend/uploads/product_1.jpg`, v.v...
+3. **Kiểm tra**:
+   - Truy cập lại website, ảnh sản phẩm sẽ hiển thị bình thường.
+
+
+---
+
 Made with ❤️ for DNU Web Development Course

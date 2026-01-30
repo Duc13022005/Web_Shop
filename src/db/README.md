@@ -5,6 +5,8 @@ This directory contains the database initialization scripts and schemas for the 
 ## Structure
 
 *   `init.sql`: The primary initialization script. It sets up the PostgreSQL schema, including tables, indexes, and constraints. It may also include initial seed data.
+*   `dump.sql`: (Optional) Can be generated using `scripts/export_db.ps1`. Contains the exported data from a running database instance.
+
 
 ## How it works
 
