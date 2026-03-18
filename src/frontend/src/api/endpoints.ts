@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
         REGISTER: '/auth/register',
         ME: '/auth/me',
         REFRESH: '/auth/refresh',
+        CHANGE_PASSWORD: '/auth/change-password',
     },
     PRODUCTS: {
         LIST: '/products',
@@ -23,4 +24,10 @@ export const API_ENDPOINTS = {
         LIST: '/orders',
         DETAIL: (id: number) => `/orders/${id}`,
     },
+    ADMIN: {
+        DASHBOARD: '/admin/dashboard',
+        EMPLOYEES: '/admin/employees',
+        EMPLOYEES_DETAIL: (id: number) => `/admin/employees/${id}`,
+        PRODUCTS: '/admin/products',
+    }
 };

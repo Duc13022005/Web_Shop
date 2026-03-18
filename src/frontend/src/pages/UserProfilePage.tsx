@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { User, MapPin, CreditCard, Lock, Bell, ChevronRight, LogOut, CheckCircle2 } from 'lucide-react';
+import { User, MapPin, CreditCard, Lock, Bell, ChevronRight, LogOut } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { client } from '../api/client';
+import { API_ENDPOINTS } from '../api/endpoints';
 
 type TabType = 'personal' | 'address' | 'payment' | 'security' | 'notifications';
 
@@ -237,17 +239,80 @@ function PersonalInfoTab({ user }: any) {
 }
 
 function SecurityTab() {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setSuccessMsg('');
+
+        if (newPassword !== confirmPassword) {
+            setError('Mật khẩu mới không khớp!');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            setError('Mật khẩu mới phải dài ít nhất 6 ký tự.');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await client.put(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, {
+                current_password: currentPassword,
+                new_password: newPassword,
+            });
+            
+            setSuccessMsg('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+            setTimeout(() => {
+                logout();
+                navigate('/login');
+            }, 2500);
+
+        } catch (err: any) {
+            console.error(err);
+            if (err.response?.status === 400 || err.response?.data?.detail) {
+                setError(err.response?.data?.detail || 'Mật khẩu hiện tại không chính xác.');
+            } else {
+                setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="animate-fade-in">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Thay đổi mật khẩu</h2>
             <p className="text-gray-500 mb-8">Nhập mật khẩu hiện tại và mật khẩu mới để thay đổi.</p>
 
-            <form className="max-w-2xl space-y-6">
+            <form className="max-w-2xl space-y-6" onSubmit={handleSubmit}>
+                {error && (
+                    <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-100 font-medium">
+                        {error}
+                    </div>
+                )}
+                {successMsg && (
+                    <div className="bg-green-50 text-green-700 p-4 rounded-xl text-sm border border-green-200 font-medium">
+                        {successMsg}
+                    </div>
+                )}
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu hiện tại</label>
                     <input
                         type="password"
+                        required
                         placeholder="Nhập mật khẩu hiện tại"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:outline-none transition"
                     />
                 </div>
@@ -256,7 +321,10 @@ function SecurityTab() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu mới</label>
                     <input
                         type="password"
+                        required
                         placeholder="Nhập mật khẩu mới"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:outline-none transition"
                     />
                 </div>
@@ -265,17 +333,21 @@ function SecurityTab() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Nhập lại mật khẩu mới</label>
                     <input
                         type="password"
+                        required
                         placeholder="Xác nhận mật khẩu mới"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:outline-none transition"
                     />
                 </div>
 
                 <div className="pt-4">
                     <button
-                        type="button"
-                        className="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg shadow-brand-500/30"
+                        type="submit"
+                        disabled={isLoading}
+                        className="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg shadow-brand-500/30 disabled:opacity-50"
                     >
-                        Lưu Mật Khẩu
+                        {isLoading ? 'Đang lưu...' : 'Lưu Mật Khẩu'}
                     </button>
                 </div>
             </form>

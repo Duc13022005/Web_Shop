@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ContactPage from './pages/ContactPage';
+import AdminManagePage from './pages/AdminManagePage';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order-success" element={<OrderSuccessPage />} />
+                <Route path="/manage" element={<AdminManagePage />} />
             </Routes>
         </Router>
     );

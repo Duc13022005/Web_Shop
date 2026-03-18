@@ -46,3 +46,29 @@ class User(Base):
     def __repr__(self) -> str:
         return f"<User {self.email}>"
 
+
+class EmployeeRole(str, enum.Enum):
+    cleaner = "Vệ sinh"
+    cashier = "Thu ngân"
+    shipper = "Shipper"
+
+
+class Employee(Base):
+    """Employee model for HR"""
+    __tablename__ = "employees"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    full_name: Mapped[str] = mapped_column(String(100))
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    phone: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    role: Mapped[EmployeeRole] = mapped_column(
+        SQLEnum(EmployeeRole, name="employee_role", create_type=False),
+        default=EmployeeRole.cashier
+    )
+    salary: Mapped[float] = mapped_column(default=0.0)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    join_date: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    
+    def __repr__(self) -> str:
+        return f"<Employee {self.full_name} - {self.role}>"
+

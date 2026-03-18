@@ -15,6 +15,7 @@ from catalog.router import router as catalog_router
 from inventory.router import router as inventory_router
 from orders.router import router as orders_router
 from contact.router import router as contact_router
+from admin.router import router as admin_router
 
 
 @asynccontextmanager
@@ -55,6 +56,7 @@ app.include_router(catalog_router, prefix=settings.API_V1_PREFIX, tags=["Catalog
 app.include_router(inventory_router, prefix=settings.API_V1_PREFIX, tags=["Inventory"])
 app.include_router(orders_router, prefix=settings.API_V1_PREFIX, tags=["Orders"])
 app.include_router(contact_router, prefix=settings.API_V1_PREFIX, tags=["Contact"])
+app.include_router(admin_router, prefix=settings.API_V1_PREFIX, tags=["Admin"])
 
 
 @app.get("/", tags=["Root"])

@@ -62,7 +62,7 @@ export default function CatalogPage() {
             } else {
                 setSelectedCategoryId(null);
             }
-        } else if (categoryQuery === 'Tất cả') {
+        } else if (categoryQuery === 'Tất cả' || categoryQuery === 'Tất cả sản phẩm') {
             setSelectedCategoryId(null);
         }
     }, [categories, categoryQuery]);
