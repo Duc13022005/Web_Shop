@@ -1,11 +1,28 @@
 import { useState } from 'react';
 import { Menu, Search, ShoppingCart, Heart, User, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, isAuthenticated, logout } = useAuth();
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
+
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+        } else {
+            navigate(`/products`);
+        }
+        setIsMenuOpen(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -40,8 +57,11 @@ export const Header = () => {
                         type="text"
                         placeholder="Tìm kiếm rau củ, thịt, cá..."
                         className="w-full pl-4 pr-10 py-2.5 rounded-full border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition shadow-sm"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
-                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600">
+                    <button onClick={handleSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-600">
                         <Search size={20} />
                     </button>
                 </div>
@@ -49,15 +69,29 @@ export const Header = () => {
                 {/* User Actions */}
                 <div className="flex items-center gap-2 md:gap-4">
                     {isAuthenticated ? (
-                        <div className="hidden md:flex items-center gap-2 hover:bg-gray-50 px-3 py-2 rounded-full transition text-sm font-medium text-gray-700 cursor-pointer group relative">
-                            <User size={20} />
-                            <span className="hidden lg:block">{user?.full_name || user?.email}</span>
+                        <div className="hidden md:flex items-center gap-2 hover:bg-gray-50 px-3 py-1.5 rounded-full transition text-sm font-medium text-gray-700 group relative">
+                            <Link to="/profile" className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold overflow-hidden border border-brand-200">
+                                    {user?.avatar ? (
+                                        <img src={user.avatar} alt="avatar" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <User size={18} />
+                                    )}
+                                </div>
+                                <span className="hidden lg:block">Xin chào, <span className="font-bold">{user?.full_name || user?.email?.split('@')[0]}</span></span>
+                            </Link>
 
                             {/* Dropdown for Logout */}
-                            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100 hidden group-hover:block">
+                            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-100 hidden group-hover:block transition-all duration-200 opacity-0 group-hover:opacity-100">
+                                <Link
+                                    to="/profile"
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                >
+                                    Thông tin tài khoản
+                                </Link>
                                 <button
                                     onClick={logout}
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                    className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
                                 >
                                     Đăng xuất
                                 </button>
@@ -95,8 +129,11 @@ export const Header = () => {
                             type="text"
                             placeholder="Tìm kiếm..."
                             className="w-full pl-4 pr-10 py-2 rounded-lg border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
-                        <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <button onClick={handleSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                             <Search size={18} />
                         </button>
                     </div>

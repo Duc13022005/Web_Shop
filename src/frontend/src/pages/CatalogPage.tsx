@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Filter, ChevronDown, Check } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';
 import { ProductCard } from '../components/common/ProductCard';
@@ -31,6 +32,10 @@ export default function CatalogPage() {
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [searchParams] = useSearchParams();
+    const categoryQuery = searchParams.get('category');
+    const searchQuery = searchParams.get('search');
+
     // Fetch Categories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -45,6 +50,23 @@ export default function CatalogPage() {
         fetchCategories();
     }, []);
 
+    // Effect to update selected category based on URL query and loaded categories
+    useEffect(() => {
+        if (categories.length > 0 && categoryQuery && categoryQuery !== 'Tất cả') {
+            const found = categories.find(c => 
+                c.name.toLowerCase() === categoryQuery.toLowerCase() || 
+                (c as any).slug?.toLowerCase() === categoryQuery.toLowerCase()
+            );
+            if (found) {
+                setSelectedCategoryId(found.id);
+            } else {
+                setSelectedCategoryId(null);
+            }
+        } else if (categoryQuery === 'Tất cả') {
+            setSelectedCategoryId(null);
+        }
+    }, [categories, categoryQuery]);
+
     // Fetch Products (with filters)
     useEffect(() => {
         const fetchProducts = async () => {
@@ -53,6 +75,9 @@ export default function CatalogPage() {
                 const params: any = { size: 100 }; // Fetch up to 100 for now
                 if (selectedCategoryId) {
                     params.category_id = selectedCategoryId;
+                }
+                if (searchQuery) {
+                    params.search = searchQuery;
                 }
                 // Optional: Server side price filtering
                 // params.max_price = priceRange; 
@@ -64,14 +89,9 @@ export default function CatalogPage() {
                 // If using server side filtering, we use res.items.
                 // If client side filtering for price (smoother slider), we filter here.
                 // Mapping: Backend (current_price) -> Frontend (price)
-                // Mapping: Backend (current_price) -> Frontend (price)
                 let items = (res.items || []).map((p: any) => ({
                     ...p,
                     price: Number(p.current_price || p.base_price || 0),
-                    // Use path as-is since it already contains /uploads/ from DB, or construct if needed.
-                    // If p.image_path starts with http, use it.
-                    // If p.image_path starts with /, use it as relative path (browser resolves to current origin).
-                    // Fallback to prepending /uploads/ if it's just a filename.
                     images: p.image_path
                         ? [p.image_path.startsWith('http') || p.image_path.startsWith('/')
                             ? p.image_path
@@ -82,6 +102,15 @@ export default function CatalogPage() {
                 // Client-side Price Filter
                 items = items.filter((p: any) => p.price <= priceRange);
 
+                // Client-side Search Filter (in case backend ignores search param)
+                if (searchQuery) {
+                    const term = searchQuery.toLowerCase();
+                    items = items.filter((p: any) => 
+                        p.name.toLowerCase().includes(term) || 
+                        (p.description && p.description.toLowerCase().includes(term))
+                    );
+                }
+
                 setProducts(items);
             } catch (err) {
                 console.error("Failed to fetch products", err);
@@ -90,10 +119,8 @@ export default function CatalogPage() {
             }
         };
 
-        // Debounce fetching if dependent on slider, but for now trigger on category change.
-        // For price, maybe just filter client side after fetching by category.
         fetchProducts();
-    }, [selectedCategoryId, priceRange]); // Re-fetch or re-filter when these change
+    }, [selectedCategoryId, priceRange, searchQuery]); // Re-fetch or re-filter when these change
 
     const FilterContent = () => (
         <div className="space-y-8">
