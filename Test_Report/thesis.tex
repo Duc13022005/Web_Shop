@@ -1,0 +1,60 @@
+\input{styles/settings}
+% Bìa báo cáo (SV sử dụng MS Word tạo bìa, sau đó export thành file PDF để ghép vào báo cáo
+
+\thesislayout
+
+\begin{document}
+% Add cover page to the document
+\coverpage
+
+% --- CHÈN 2 TRANG HÀNH CHÍNH & TRANG TRẮNG TẠI ĐÂY ---
+\input{chapters/admin_pages} 
+% -----------------------------------------------------
+
+% Bắt đầu đánh số La Mã (i, ii, iii...) cho phần đầu
+\frontmatter
+
+% % Lời cảm ơn
+% \begin{acknowledgments}
+% Chúng tôi xin gửi lời cảm ơn chân thành đến ... đã tận tình giảng dạy và truyền đạt kiến thức trong suốt quá trình học tập, tạo nền tảng vững chắc để chúng tôi thực hiện bài tập lớn này
+% \end{acknowledgments}
+
+% Tóm tắt báo cáo (Đang ẩn)
+%\begin{abstract}
+%Tài liệu này cung cấp một bản thiết kế mẫu biên soạn báo cáo bài tập lớn theo quy định của Trường đại học Đại Nam.
+%\end{abstract}	
+
+% Bảng mục lục
+\tableofcontents
+% Danh mục bảng
+\listoftables
+% Danh mục hình
+\listoffigures
+% Danh mục giải thuật
+%\listofalgorithms
+
+\mainmatter
+\fancyhead{} 
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy} 
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\fancyhead[R]{\chaptername\ \thechapter\ --\ \leftmark}
+
+% Các chương nội dung
+%\input{chapters/introduction}
+\input{chapters/chuong1}
+\input{chapters/chuong2}
+\input{chapters/chuong3}
+\input{chapters/chuong4}
+\input{chapters/chuong5}
+%\input{chapters/conclusion}
+% \appendix
+ \input{chapters/appendix}
+% Tài liệu tham khảo
+\input{chapters/references}
+
+
+
+
+% Kết thúc
+\end{document}

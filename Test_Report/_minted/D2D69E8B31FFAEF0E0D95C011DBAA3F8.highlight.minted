@@ -1,0 +1,47 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{asyncio}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{playwright.async\PYGZus{}api}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{async\PYGZus{}playwright}
+
+\PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}7comart\PYGZus{}login\PYGZus{}automation}\PYG{p}{():}
+    \PYG{c+c1}{\PYGZsh{} Khởi tạo Playwright engine và mở trình duyệt ẩn danh}
+    \PYG{k}{async} \PYG{k}{with} \PYG{n}{async\PYGZus{}playwright}\PYG{p}{()} \PYG{k}{as} \PYG{n}{p}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Launch browser (set headless=False để xem trực quan giao diện chạy)}
+        \PYG{n}{browser} \PYG{o}{=} \PYG{k}{await} \PYG{n}{p}\PYG{o}{.}\PYG{n}{chromium}\PYG{o}{.}\PYG{n}{launch}\PYG{p}{(}\PYG{n}{headless}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{context} \PYG{o}{=} \PYG{k}{await} \PYG{n}{browser}\PYG{o}{.}\PYG{n}{new\PYGZus{}context}\PYG{p}{()}
+        \PYG{n}{page} \PYG{o}{=} \PYG{k}{await} \PYG{n}{context}\PYG{o}{.}\PYG{n}{new\PYGZus{}page}\PYG{p}{()}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[INFO] Đang truy cập trang đăng nhập 7coMART...\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{goto}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}http://localhost/login\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Chờ form đăng nhập sẵn sàng hiển thị trên DOM}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{wait\PYGZus{}for\PYGZus{}selector}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}email\PYGZhy{}input\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Thao tác điền thông tin đăng nhập mẫu hợp lệ}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[INFO] Nhập thông tin đăng nhập...\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}email\PYGZhy{}input\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}khach1@gmail.com\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}password\PYGZhy{}input\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}password123\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Click nút Submit Đăng nhập}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[INFO] Click nút Đăng nhập...\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{click}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}login\PYGZhy{}submit\PYGZhy{}btn\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Chờ hệ thống xử lý API và chuyển hướng về trang chủ}
+        \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{wait\PYGZus{}for\PYGZus{}url}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}http://localhost/\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Kiểm tra sự hiện diện của phần tử giao diện trang chủ mua sắm}
+        \PYG{n}{is\PYGZus{}logged\PYGZus{}in} \PYG{o}{=} \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{is\PYGZus{}visible}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}user\PYGZhy{}profile\PYGZhy{}avatar\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n}{is\PYGZus{}logged\PYGZus{}in}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[SUCCESS] Test Case Đăng nhập tự động: ĐẠT (PASS)!\PYGZdq{}}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} Chụp ảnh màn hình lưu vết minh chứng kết quả đạt}
+            \PYG{k}{await} \PYG{n}{page}\PYG{o}{.}\PYG{n}{screenshot}\PYG{p}{(}\PYG{n}{path}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}outputs/screenshots/login\PYGZus{}pass\PYGZus{}proof.png\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[FAIL] Test Case Đăng nhập tự động: LỖI (FAIL)!\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Đóng kết nối trình duyệt an toàn}
+        \PYG{k}{await} \PYG{n}{browser}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} Kích hoạt chạy hàm bất đồng bộ}
+\PYG{k}{if} \PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZdq{}}\PYG{p}{:}
+    \PYG{n}{asyncio}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{n}{test\PYGZus{}7comart\PYGZus{}login\PYGZus{}automation}\PYG{p}{())}
+\end{MintedVerbatim}

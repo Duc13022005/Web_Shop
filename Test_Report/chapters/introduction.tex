@@ -1,0 +1,76 @@
+\chapter{GIỚI THIỆU ĐỀ TÀI}
+\label{ch:chapter1}
+
+\section{Giới thiệu chung về đề tài}
+
+Trong bối cảnh Cách mạng Công nghiệp 4.0, chuyển đổi số đã trở thành yêu cầu sống còn đối với các doanh nghiệp bán lẻ. Sự phát triển bùng nổ của công nghệ thông tin và Internet đã thay đổi hoàn toàn bộ mặt của ngành bán lẻ toàn cầu. Đặc biệt, mô hình ``Quick Commerce'' (Thương mại nhanh) đang nổi lên như một xu hướng tất yếu, tập trung vào việc giao hàng siêu tốc các mặt hàng nhu yếu phẩm, thực phẩm và đồ uống trong khoảng thời gian ngắn.
+
+Tuy nhiên, đối với các cửa hàng tiện lợi (Convenience Store - C-Store) truyền thống, việc duy trì mô hình kinh doanh dựa vào lượng khách vãng lai (foot traffic) đang dần bộc lộ nhiều hạn chế. Những vấn đề tồn tại lớn nhất bao gồm:
+
+\begin{itemize}
+    \item \textbf{Sức ép cạnh tranh:} Các nền tảng thương mại điện tử lớn đang chiếm lĩnh thị phần nhờ sự tiện lợi và tốc độ vượt trội.
+    \item \textbf{Quản lý hàng tồn kho kém hiệu quả:} Các phương pháp quản lý thủ công thường dẫn đến sai lệch số liệu. Đặc biệt, việc kiểm soát hạn sử dụng (expiry dates) không chặt chẽ dẫn đến lãng phí thực phẩm do hư hỏng, hết hạn mà không được phát hiện kịp thời.
+    \item \textbf{Thiếu kênh tiếp cận:} Việc thiếu hụt một kênh bán hàng trực tuyến tích hợp khiến các cửa hàng bỏ lỡ lượng lớn khách hàng tiềm năng, đặc biệt là giới trẻ - những người ưa chuộng mua sắm qua thiết bị di động.
+\end{itemize}
+
+Xuất phát từ thực tế đó, đề tài \textbf{``Xây dựng Website cửa hàng tiện lợi''} được đề xuất nhằm cung cấp một giải pháp công nghệ toàn diện. Hệ thống không chỉ là một giao diện bán hàng (Storefront) cho khách mua sắm mà còn là hệ thống quản trị (Back-office) mạnh mẽ, tích hợp quy trình quản lý kho thông minh theo nguyên lý \textbf{FEFO (First Expired, First Out)} để ưu tiên xuất các lô hàng hết hạn trước, giúp giảm thiểu tối đa tỷ lệ hủy hàng.
+
+\section{Lý do chọn đề tài}
+
+Quyết định lựa chọn đề tài này xuất phát từ sự hội tụ của ba yếu tố chính: nhu cầu thị trường, định hướng công nghệ và thách thức nghiệp vụ.
+
+\subsection{Nhu cầu thị trường và xã hội}
+Người tiêu dùng ngày càng quan tâm đến an toàn vệ sinh thực phẩm và nguồn gốc xuất xứ. Một hệ thống website minh bạch thông tin sản phẩm và đảm bảo quy trình luân chuyển hàng hóa khoa học sẽ tạo dựng niềm tin vững chắc nơi khách hàng. Các giải pháp hiện có trên thị trường hoặc quá đắt đỏ đối với các chuỗi cửa hàng vừa và nhỏ, hoặc thiếu các tính năng đặc thù như quản lý lô hàng (batch management).
+
+\subsection{Định hướng nghề nghiệp và học thuật}
+Đề tài cung cấp môi trường lý tưởng để nhóm nghiên cứu thực hành và làm chủ các công nghệ hiện đại (State-of-the-art technologies) đang được các doanh nghiệp săn đón:
+\begin{itemize}
+    \item \textbf{Frontend:} Sử dụng thư viện ReactJS để xây dựng giao diện người dùng tương tác cao.
+    \item \textbf{Backend:} Sử dụng Python FastAPI để xử lý API hiệu năng cao và bất đồng bộ.
+    \item \textbf{Database:} Sử dụng PostgreSQL để đảm bảo tính toàn vẹn dữ liệu giao dịch.
+    \item \textbf{Deployment:} Ứng dụng Docker để đóng gói và triển khai hệ thống linh hoạt.
+\end{itemize}
+
+\subsection{Thách thức trong nghiệp vụ xử lý kho}
+Khác với các mô hình thương mại điện tử thông thường áp dụng nguyên lý FIFO (Nhập trước Xuất trước), cửa hàng tiện lợi kinh doanh thực phẩm tươi sống buộc phải áp dụng FEFO (Hết hạn trước Xuất trước). Việc thiết kế cơ sở dữ liệu và thuật toán để tự động hóa quy trình chọn lô hàng xuất kho dựa trên hạn sử dụng là một bài toán thú vị, đòi hỏi tư duy logic và kỹ năng thiết kế thuật toán chính xác.
+
+\section{Mục tiêu nghiên cứu}
+
+Mục tiêu tổng quát của đề tài là xây dựng hoàn thiện một hệ thống phần mềm quản lý và kinh doanh cửa hàng tiện lợi trên nền tảng web, đảm bảo tính ổn định, bảo mật và hiệu năng cao, phục vụ hai đối tượng chính là khách hàng mua sắm và nhân viên quản lý.
+
+\textbf{Các mục tiêu cụ thể bao gồm:}
+\begin{enumerate}
+    \item \textbf{Xây dựng Kiến trúc Microservices/Modular:} Thiết kế và triển khai hệ thống với kiến trúc tách biệt Frontend và Backend, sử dụng Docker container để đóng gói môi trường.
+    \item \textbf{Tối ưu hóa Quản lý Tồn kho (Inventory Optimization):} Phát triển module quản lý kho với khả năng theo dõi hàng hóa theo từng lô (batch) và ngày hết hạn. Hệ thống phải tự động đề xuất xuất kho theo nguyên tắc FEFO khi có đơn hàng mới.
+    \item \textbf{Trải nghiệm Người dùng (UX) Vượt trội:} Thiết kế giao diện người dùng hiện đại, thân thiện, tương thích đa thiết bị (Responsive Design) cho 4 trang chức năng chính: Trang chủ, Trang giao dịch, Trang người dùng và Trang đăng nhập.
+    \item \textbf{Đảm bảo Chất lượng Phần mềm:} Áp dụng quy trình kiểm thử bài bản, bao gồm kiểm thử đơn vị (Unit Testing) và kiểm thử hệ thống (System Testing) để giảm thiểu lỗi nghiệp vụ.
+\end{enumerate}
+
+\section{Phạm vi nghiên cứu}
+
+Để đảm bảo tính khả thi và tập trung vào các chức năng cốt lõi trong khuôn khổ thời gian của đồ án môn học, phạm vi nghiên cứu được xác định cụ thể như sau:
+
+\subsection{Đối tượng nghiên cứu}
+Các quy trình nghiệp vụ cơ bản tại một cửa hàng tiện lợi quy mô vừa, bao gồm quy trình bán hàng trực tuyến (B2C) và quy trình quản lý nhập/xuất kho nội bộ.
+
+\subsection{Công nghệ sử dụng}
+\begin{itemize}
+    \item \textbf{Backend:} Ngôn ngữ Python với framework FastAPI để xử lý API, xác thực và logic nghiệp vụ.
+    \item \textbf{Frontend:} Thư viện ReactJS (JavaScript) để xây dựng giao diện người dùng.
+    \item \textbf{Database:} Hệ quản trị cơ sở dữ liệu quan hệ PostgreSQL để lưu trữ dữ liệu bền vững.
+    \item \textbf{Infrastructure:} Docker và Docker Compose để ảo hóa và triển khai hệ thống.
+\end{itemize}
+
+\subsection{Loại dữ liệu xử lý}
+\begin{itemize}
+    \item \textbf{Dữ liệu sản phẩm:} Tên, mã SKU, giá bán, giá nhập, danh mục, hình ảnh (URL).
+    \item \textbf{Dữ liệu kho:} Số lượng tồn, thông tin lô hàng (Batch ID), ngày sản xuất, ngày hết hạn.
+    \item \textbf{Dữ liệu giao dịch:} Thông tin đơn hàng, chi tiết sản phẩm, trạng thái thanh toán, thông tin khách hàng.
+\end{itemize}
+
+\subsection{Giới hạn chức năng}
+\begin{itemize}
+    \item Hệ thống tập trung vào quy trình đặt hàng và trừ kho logic.
+    \item Phần thanh toán sẽ được mô phỏng (Mock Payment) thay vì tích hợp cổng thanh toán ngân hàng thực tế do rào cản pháp lý và kỹ thuật.
+    \item Các chức năng quản lý nhân sự nâng cao (như chấm công, tính lương) và quản lý logistics giao hàng thời gian thực (Real-time GPS tracking) nằm ngoài phạm vi của đề tài này.
+\end{itemize}

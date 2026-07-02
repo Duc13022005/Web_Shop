@@ -1,0 +1,75 @@
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+
+\section{Kết quả đạt được của đề tài}
+Đề tài ``Kiểm thử Mantis cho Website Cửa hàng Tiện lợi 7coMART'' đã hoàn thành xuất sắc các mục tiêu nghiên cứu và thực hành đề ra, cụ thể:
+\begin{itemize}
+    \item Xây dựng thành công kế hoạch và kịch bản kiểm thử hộp đen toàn diện bao phủ các luồng nghiệp vụ cốt lõi của website bán hàng tiện lợi trực tuyến.
+    \item Phát hiện và hỗ trợ khắc phục thành công 8 lỗi phần mềm khác nhau, trong đó có các lỗ hổng bảo mật nghiêm trọng (SQL Injection) và lỗi logic nghiệp vụ gây thất thoát tài sản (số lượng giỏ hàng âm).
+    \item Làm chủ quy trình theo dõi và quản lý vòng đời lỗi trực quan, chuyên nghiệp trên hệ thống trực tuyến Mantis Bug Tracker.
+    \item Ứng dụng thành công các độ đo toán học nâng cao để kiểm chứng độ tin cậy và chất lượng kiểm thử của dự án.
+\end{itemize}
+
+\section{Bài học kinh nghiệm rút ra}
+\begin{itemize}
+    \item \textbf{Tư duy thiết kế Test Case sớm:} Nhóm nhận thức rõ tầm quan trọng của việc nghiên cứu kỹ tài liệu đặc tả chức năng để phân chia các lớp tương đương và giá trị biên chuẩn xác, tránh việc thiết kế test case mang tính cảm tính.
+    \item \textbf{Kỹ năng giao tiếp kỹ thuật:} Quy trình làm việc giữa Tester và Developer thông qua MantisBT đã rèn luyện cho các thành viên khả năng viết báo cáo lỗi súc tích, mô tả bước tái hiện mạch lạc, tăng hiệu quả phối hợp làm việc nhóm.
+    \item \textbf{Coi trọng kiểm thử bảo mật:} Dự án thực tế cho thấy các lỗi kỹ thuật đôi khi không chỉ dừng lại ở sai lệch giao diện mà còn ẩn chứa lỗ hổng bảo mật có thể đánh sập cả hệ thống nếu không được kiểm thử nghiêm ngặt.
+\end{itemize}
+
+\section{Hướng phát triển trong tương lai - Kiểm thử tự động (Automation Testing)}
+Mặc dù kiểm thử thủ công (Manual Testing) đóng vai trò cốt lõi trong việc khám phá lỗi ban đầu, tuy nhiên khi dự án phình to với hàng trăm chức năng, việc lặp đi lặp lại hàng nghìn test cases hồi quy bằng tay sẽ tiêu tốn khổng lồ nhân lực và dễ sinh ra sai sót do mệt mỏi.
+
+Do đó, hướng phát triển tất yếu tiếp theo của đề tài là nghiên cứu áp dụng \textbf{Kiểm thử tự động (Automation Testing)} sử dụng các công cụ mã nguồn mở mạnh mẽ như \textbf{Playwright} hoặc \textbf{Selenium WebDriver} kết hợp ngôn ngữ lập trình Python.
+
+\subsection{Mã nguồn mẫu kịch bản kiểm thử tự động bằng Python và Playwright}
+Dưới đây là đoạn mã Python hoàn chỉnh sử dụng thư viện Playwright để tự động hóa kịch bản kiểm thử tính năng Đăng nhập của website 7coMART, tự động mở trình duyệt Chromium, nhập dữ liệu, kiểm tra chuyển hướng và chụp ảnh kết quả:
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,fontsize=\footnotesize,linenos]{python}
+import asyncio
+from playwright.async_api import async_playwright
+
+async def test_7comart_login_automation():
+    # Khởi tạo Playwright engine và mở trình duyệt ẩn danh
+    async with async_playwright() as p:
+        # Launch browser (set headless=False để xem trực quan giao diện chạy)
+        browser = await p.chromium.launch(headless=False)
+        context = await browser.new_context()
+        page = await context.new_page()
+        
+        print("[INFO] Đang truy cập trang đăng nhập 7coMART...")
+        await page.goto("http://localhost/login")
+        
+        # Chờ form đăng nhập sẵn sàng hiển thị trên DOM
+        await page.wait_for_selector("#email-input")
+        
+        # Thao tác điền thông tin đăng nhập mẫu hợp lệ
+        print("[INFO] Nhập thông tin đăng nhập...")
+        await page.fill("#email-input", "khach1@gmail.com")
+        await page.fill("#password-input", "password123")
+        
+        # Click nút Submit Đăng nhập
+        print("[INFO] Click nút Đăng nhập...")
+        await page.click("#login-submit-btn")
+        
+        # Chờ hệ thống xử lý API và chuyển hướng về trang chủ
+        await page.wait_for_url("http://localhost/")
+        
+        # Kiểm tra sự hiện diện của phần tử giao diện trang chủ mua sắm
+        is_logged_in = await page.is_visible("#user-profile-avatar")
+        
+        if is_logged_in:
+            print("[SUCCESS] Test Case Đăng nhập tự động: ĐẠT (PASS)!")
+            # Chụp ảnh màn hình lưu vết minh chứng kết quả đạt
+            await page.screenshot(path="outputs/screenshots/login_pass_proof.png")
+        else:
+            print("[FAIL] Test Case Đăng nhập tự động: LỖI (FAIL)!")
+            
+        # Đóng kết nối trình duyệt an toàn
+        await browser.close()
+
+# Kích hoạt chạy hàm bất đồng bộ
+if __name__ == "__main__":
+    asyncio.run(test_7comart_login_automation())
+\end{minted}
+
+Đoạn mã tự động hóa trên thể hiện khả năng ứng dụng thực tế cao của đề tài vào các dự án phần mềm chuyên nghiệp hiện đại, mở ra triển vọng tích hợp kiểm thử tự động vào chu kỳ phân phối liên tục (CI/CD DevOps).

@@ -1,0 +1,128 @@
+\chapter{LẬP KẾ HOẠCH VÀ THIẾT KẾ KỊCH BẢN KIỂM THỬ}
+
+\section{Phạm vi kiểm thử theo từng Sprint}
+Nhằm đảm bảo quá trình kiểm thử được triển khai khoa học, nhóm đã phân chia phạm vi kiểm thử thành 02 Sprint thực hành trọng tâm, tập trung vào luồng tương tác cốt lõi của khách hàng:
+\begin{itemize}
+    \item \textbf{Sprint 1 (Xác thực và Tra cứu sản phẩm):}
+    \begin{itemize}
+        \item Tính năng Đăng ký tài khoản mới và Đăng nhập hệ thống (Phân quyền Customer/Staff/Admin).
+        \item Tính năng Tìm kiếm sản phẩm theo tên và Lọc sản phẩm theo danh mục ngành hàng.
+    \end{itemize}
+    \item \textbf{Sprint 2 (Giỏ hàng và Quy trình đặt hàng):}
+    \begin{itemize}
+        \item Các thao tác thêm sản phẩm vào giỏ, điều chỉnh tăng/giảm số lượng sản phẩm, xóa sản phẩm khỏi giỏ hàng.
+        \item Luồng xác nhận đơn hàng, ràng buộc số lượng tồn kho thực tế, áp dụng quy tắc FEFO khi xuất kho hàng hóa.
+    \end{itemize}
+\end{itemize}
+
+\section{Áp dụng các kỹ thuật kiểm thử Hộp đen (Black-box Testing)}
+Kiểm thử hộp đen tập trung hoàn toàn vào đầu vào và đầu ra của phần mềm dựa trên tài liệu đặc tả chức năng, không đòi hỏi Tester phải hiểu rõ cấu trúc mã nguồn bên trong Python FastAPI hay React. Nhóm áp dụng 3 kỹ thuật kinh điển để tối ưu hóa bộ kịch bản kiểm thử:
+
+\subsection{Kỹ thuật Phân lớp tương đương (Equivalence Partitioning)}
+Kỹ thuật này chia miền đầu vào của chương trình thành các lớp dữ liệu tương đương nhau, đại diện cho hành vi xử lý giống nhau của hệ thống. Ta chỉ cần chọn một giá trị đại diện trong mỗi lớp để kiểm thử, giúp giảm thiểu đáng kể số ca kiểm thử cần chạy.
+
+\noindent\textbf{Áp dụng cho Form Đăng nhập 7coMART:}
+\begin{itemize}
+    \item \textbf{Trường Email:}
+    \begin{itemize}
+        \item Lớp hợp lệ ($EC_1$): Địa chỉ email đúng cấu trúc tiêu chuẩn (Ví dụ: \texttt{khach1@gmail.com}).
+        \item Lớp không hợp lệ ($EC_2$): Email thiếu ký tự \texttt{@} (Ví dụ: \texttt{khach1gmail.com}).
+        \item Lớp không hợp lệ ($EC_3$): Email thiếu tên miền (Ví dụ: \texttt{khach1@.com} hoặc \texttt{khach1@gmail}).
+        \item Lớp không hợp lệ ($EC_4$): Email bỏ trống.
+    \end{itemize}
+    \item \textbf{Trường Mật khẩu:}
+    \begin{itemize}
+        \item Lớp hợp lệ ($EC_5$): Mật khẩu có độ dài từ 8 đến 20 ký tự (Ví dụ: \texttt{password123}).
+        \item Lớp không hợp lệ ($EC_6$): Mật khẩu quá ngắn dưới 8 ký tự (Ví dụ: \texttt{pass12}).
+        \item Lớp không hợp lệ ($EC_7$): Mật khẩu quá dài trên 20 ký tự.
+        \item Lớp không hợp lệ ($EC_8$): Mật khẩu để trống.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Kỹ thuật Phân tích giá trị biên (Boundary Value Analysis)}
+Lỗi phần mềm thường tập trung rất cao ở ranh giới của các miền giá trị đầu vào thay vì ở giữa. Kỹ thuật này lựa chọn các giá trị tại biên và các giá trị ngay sát biên để thực thi kiểm thử.
+
+\noindent\textbf{Áp dụng cho số lượng sản phẩm thêm vào giỏ hàng (Quantity):}
+Giả sử số lượng tồn kho thực tế của mặt hàng sữa tươi TH True Milk trong hệ thống tại lô hàng hiện tại là $N = 50$ hộp. Số lượng đặt hàng hợp lệ phải nằm trong khoảng $[1, 50]$. Các giá trị biên được xác định gồm:
+\begin{itemize}
+    \item Biên dưới hợp lệ tối thiểu: $1$ (Hệ thống chấp nhận thêm thành công).
+    \item Giá trị sát dưới không hợp lệ: $0$ (Hệ thống từ chối, hiển thị thông báo lỗi số lượng tối thiểu phải bằng 1).
+    \item Giá trị cực biên âm: $-1$ (Hệ thống ngăn chặn, không cho phép nhập số lượng âm).
+    \item Biên trên hợp lệ tối đa: $50$ (Hệ thống chấp nhận, lấy toàn bộ tồn kho của lô hiện tại).
+    \item Giá trị vượt sát biên trên: $51$ (Hệ thống từ chối, thông báo không đủ số lượng hàng tồn kho cung cấp).
+    \item Giá trị vượt xa biên trên: $100$ (Hệ thống từ chối, cảnh báo vượt quá giới hạn kho).
+\end{itemize}
+
+\subsection{Kỹ thuật Bảng quyết định (Decision Table)}
+Kỹ thuật bảng quyết định được sử dụng để thiết kế kịch bản test cho các tính năng chứa logic nghiệp vụ phức tạp, chịu sự chi phối đồng thời của nhiều điều kiện đầu vào khác nhau.
+
+\noindent\textbf{Áp dụng cho logic áp dụng mã giảm giá thanh toán (Discount Coupon):}
+\begin{itemize}
+    \item \textbf{Các điều kiện đầu vào (Conditions):}
+    \begin{enumerate}
+        \item $C_1$: Nhập đúng mã giảm giá đang hoạt động (Ví dụ: \texttt{COOP10}). (True/False)
+        \item $C_2$: Tổng giá trị đơn hàng đạt điều kiện tối thiểu $\ge 100.000$ VNĐ. (True/False)
+        \item $C_3$: Mã giảm giá còn lượt sử dụng và còn thời hạn hiệu lực. (True/False)
+    \end{enumerate}
+    \item \textbf{Các hành động tương ứng (Actions):}
+    \begin{enumerate}
+        \item $A_1$: Áp dụng mã giảm giá thành công, giảm trừ trực tiếp 10\% vào tổng hóa đơn.
+        \item $A_2$: Hiển thị cảnh báo lỗi tương ứng với điều kiện bị vi phạm.
+    \end{enumerate}
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Bảng quyết định logic áp dụng mã giảm giá tại 7coMART}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Điều kiện / Luật} & \textbf{R1} & \textbf{R2} & \textbf{R3} & \textbf{R4} & \textbf{R5} & \textbf{R6} & \textbf{R7} & \textbf{R8} \\ \hline
+$C_1$: Mã giảm giá hợp lệ? & Y & Y & Y & Y & N & N & N & N \\ \hline
+$C_2$: Giá trị đơn hàng $\ge 100k$? & Y & Y & N & N & Y & Y & N & N \\ \hline
+$C_3$: Mã còn lượt/còn hạn? & Y & N & Y & N & Y & N & Y & N \\ \hline
+\hline
+$A_1$: Áp dụng thành công (Giảm 10\%) & \cellcolor{green!20}\textbf{X} & & & & & & & \\ \hline
+$A_2$: Hiển thị thông báo lỗi & & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} & \cellcolor{red!20}\textbf{X} \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Danh sách Kịch bản kiểm thử (Test Cases) chi tiết}
+Dưới đây là tập hợp 15 kịch bản kiểm thử cốt lõi được thiết kế chi tiết bằng bảng LaTeX, bao phủ toàn bộ phạm vi kiểm thử đã vạch ra của Sprint 1 và Sprint 2 trên hệ thống cửa hàng tiện lợi 7coMART.
+
+\begin{table}[H]
+\centering
+\caption{Kịch bản kiểm thử chi tiết - Sprint 1 (Xác thực \& Tìm kiếm)}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|p{1.2cm}|p{1.8cm}|p{3.5cm}|p{2.5cm}|p{5.5cm}|}
+\hline
+\textbf{Mã TC} & \textbf{Mô-đun} & \textbf{Mục tiêu kiểm thử} & \textbf{Dữ liệu vào} & \textbf{Kết quả mong đợi} \\ \hline
+\texttt{TC\_01} & Đăng ký & Kiểm tra đăng ký thành công với thông tin hợp lệ. & Email, mật khẩu, tên hợp lệ. & Đăng ký thành công, thông báo kích hoạt tài khoản và chuyển hướng tới Login. \\ \hline
+\texttt{TC\_02} & Đăng ký & Kiểm tra đăng ký thất bại khi Email sai định dạng. & Email thiếu \texttt{@} (\texttt{testgmail.com}) & Hiển thị thông báo lỗi email không đúng định dạng chuẩn. \\ \hline
+\texttt{TC\_03} & Đăng ký & Kiểm tra đăng ký thất bại khi mật khẩu quá ngắn. & Mật khẩu 6 ký tự (\texttt{123456}) & Hiển thị cảnh báo lỗi độ dài mật khẩu tối thiểu phải từ 8 ký tự trở lên. \\ \hline
+\texttt{TC\_04} & Đăng ký & Kiểm tra đăng ký thất bại khi email đã tồn tại. & Email trùng lặp hệ thống. & Thông báo lỗi email đã được đăng ký sử dụng trước đó. \\ \hline
+\texttt{TC\_05} & Đăng nhập & Kiểm tra đăng nhập thành công với vai trò Khách hàng. & \texttt{khach1@gmail.com} mật khẩu đúng. & Đăng nhập thành công, lưu JWT Token và chuyển hướng về trang chủ mua sắm. \\ \hline
+\texttt{TC\_06} & Đăng nhập & Kiểm tra đăng nhập thất bại khi sai mật khẩu. & Email đúng, mật khẩu sai. & Hiển thị thông báo lỗi tài khoản hoặc mật khẩu không chính xác. \\ \hline
+\texttt{TC\_07} & Tìm kiếm & Tìm kiếm thành công sản phẩm với từ khóa tiếng Việt. & Từ khóa: ``sữa tươi'' & Hiển thị danh sách các sản phẩm sữa tươi TH, Vinamilk tương ứng. \\ \hline
+\texttt{TC\_08} & Tìm kiếm & Kiểm tra tìm kiếm không tìm thấy sản phẩm. & Từ khóa: ``linh kiện pc'' & Hiển thị thông báo không tìm thấy sản phẩm phù hợp. \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Kịch bản kiểm thử chi tiết - Sprint 2 (Giỏ hàng \& Đặt hàng)}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|p{1.2cm}|p{1.8cm}|p{3.5cm}|p{2.5cm}|p{5.5cm}|}
+\hline
+\textbf{Mã TC} & \textbf{Mô-đun} & \textbf{Mục tiêu kiểm thử} & \textbf{Dữ liệu vào} & \textbf{Kết quả mong đợi} \\ \hline
+\texttt{TC\_09} & Giỏ hàng & Thêm sản phẩm thành công vào giỏ hàng trống. & Click chọn SP sữa tươi, số lượng = 1. & Sản phẩm xuất hiện trong giỏ hàng, tổng tiền cập nhật chính xác. \\ \hline
+\texttt{TC\_10} & Giỏ hàng & Kiểm tra thêm số lượng biên bằng $0$ vào giỏ hàng. & Nhập số lượng = 0. & Hệ thống báo lỗi số lượng không hợp lệ (phải $\ge 1$). \\ \hline
+\texttt{TC\_11} & Giỏ hàng & Kiểm tra chặn thêm số lượng âm vào giỏ hàng. & Nhập số lượng = -5. & Không cho phép nhập âm, tự động reset về 1 hoặc báo lỗi tham số. \\ \hline
+\texttt{TC\_12} & Giỏ hàng & Kiểm tra thêm vượt số lượng tồn kho tối đa. & Nhập số lượng lớn hơn tồn kho thực tế. & Thông báo không đủ số lượng hàng tồn kho cung cấp. \\ \hline
+\texttt{TC\_13} & Đặt hàng & Đặt hàng thành công với giỏ hàng hợp lệ. & Click thanh toán, chọn COD. & Tạo đơn hàng thành công, trừ kho đúng lô hàng hết hạn trước (FEFO). \\ \hline
+\texttt{TC\_14} & Đặt hàng & Áp dụng thành công mã giảm giá hợp lệ. & Nhập mã \texttt{COOP10} đơn hàng $\ge 100k$. & Đơn hàng được giảm trực tiếp 10\% tổng giá trị hóa đơn thanh toán. \\ \hline
+\texttt{TC\_15} & Đặt hàng & Áp dụng thất bại mã giảm giá khi đơn hàng dưới 100k. & Nhập mã \texttt{COOP10} đơn hàng $50k$. & Báo lỗi đơn hàng chưa đạt giá trị tối thiểu để sử dụng mã ưu đãi. \\ \hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,16 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Giao diện trang chủ mua sắm trực tuyến của hệ thống cửa hàng tiện lợi 7coMART}}{2}{figure.caption.6}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Giao diện form Đăng ký tài khoản mới của hệ thống 7coMART}}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Giao diện form Đăng nhập tài khoản của hệ thống 7coMART}}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Giao diện Giỏ hàng với các sản phẩm được chọn trong Sprint 2}}{11}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Giao diện thanh toán và kiểm định logic giỏ hàng}}{11}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Giao diện bảng điều khiển quản lý và theo dõi lỗi Mantis Bug Tracker của dự án 7coMART}}{13}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Chi tiết ticket lỗi bảo mật SQL Injection trên form Đăng nhập được ghi nhận trên MantisBT}}{14}{figure.caption.14}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Chi tiết ticket lỗi Unicode khi tìm kiếm tiếng Việt có dấu được ghi nhận trên MantisBT}}{15}{figure.caption.15}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Chi tiết ticket lỗi can thiệp sửa đổi số lượng sản phẩm âm trong giỏ hàng được ghi nhận trên MantisBT}}{16}{figure.caption.16}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Biểu đồ thống kê tỷ lệ phần trăm phân bố trạng thái lỗi và mức độ nghiêm trọng trích xuất từ hệ thống Mantis Bug Tracker}}{20}{figure.caption.19}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

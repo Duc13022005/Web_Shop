@@ -1,0 +1,43 @@
+\appendix
+\chapter{Phụ lục: Hướng dẫn cài đặt và Cấu hình hệ thống Kiểm thử}
+
+Phụ lục này cung cấp các hướng dẫn kỹ thuật chi tiết giúp độc giả và hội đồng phản biện có thể cài đặt, tái lập thành công môi trường kiểm thử website 7coMART và tích hợp Mantis Bug Tracker cục bộ.
+
+\section*{Phụ lục A: Cấu hình tệp docker-compose.yml cho Mantis Bug Tracker}
+Để cài đặt nhanh chóng MantisBT cùng cơ sở dữ liệu MySQL đi kèm, ta bổ sung cấu hình container sau vào tệp Docker Compose:
+
+\begin{verbatim}
+version: '3.8'
+services:
+  mantis_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: bugtracker
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mantis_db_data:/var/lib/mysql
+
+  mantis_web:
+    image: vimagick/mantisbt:latest
+    ports:
+      - "8089:80"
+    links:
+      - mantis_db:db
+    environment:
+      MANTIS_DB_NAME: bugtracker
+      MANTIS_DB_USER: root
+      MANTIS_DB_PASS: root_password
+
+volumes:
+  mantis_db_data:
+\end{verbatim}
+
+\section*{Phụ lục B: Quy trình khởi chạy toàn bộ môi trường}
+\begin{enumerate}
+    \item Khởi chạy dự án 7coMART bằng lệnh:
+    \begin{verbatim}
+    $ docker-compose up -d
+    \end{verbatim}
+    \item Truy cập \url{http://localhost} để kiểm tra tính sẵn sàng của Web Shop.
+    \item Khởi chạy cụm Mantis Bug Tracker và truy cập \url{http://localhost:8089} để hoàn tất các cấu hình tạo tài khoản Quản lý dự án, Tester và Developer.
+\end{enumerate}
